@@ -31,6 +31,7 @@ export interface Native {
   readonly promptInit: () => void
   readonly promptAddMessage: (conversationId: number, role: string, content: string) => number
   readonly promptMaterialize: (conversationId: number) => string
+  readonly promptAttachmentByteBudget?: () => number
   /**
    * The bytes cross as a plain array of numbers; only a build that takes a typed array accepts one, and it
    * rejects the other shape.
@@ -73,8 +74,7 @@ export function available(): boolean {
 const DEFAULT_POOL_ID = 1
 
 /**
- * Registers an attachment payload with the native arena so repeated reads of
- * the same attachment do not re-encode the bytes.
+ * Registers bytes with the bounded native LRU to avoid repeated disk reads.
  *
  * The bytes are handed over as they are: a build that only takes a plain array of numbers rejects them, and the
  * rejection is swallowed so the caller keeps its own copy.
@@ -83,6 +83,9 @@ export function putAttachment(conversationId: number, attachmentId: string, byte
   const api = native()
   if (!api) return false
   try {
+    // Older binaries retain every payload indefinitely; never populate that arena.
+    const budget = api.promptAttachmentByteBudget?.()
+    if (budget === undefined || bytes.byteLength > budget) return false
     api.promptAddAttachment(conversationId, attachmentId, bytes)
     return true
   } catch {

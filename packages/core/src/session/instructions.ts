@@ -7,7 +7,6 @@ import { Bus } from "../bus.js"
 import { Database } from "../database/database.js"
 import { FSUtil } from "@ocnano/util/fs-util"
 import { Location } from "../location.js"
-import { OcNano } from "../native/oc-nano.js"
 import { SessionEvent } from "./event.js"
 import { MessageDecodeError } from "./error.js"
 import { SessionHistory } from "./history.js"
@@ -63,12 +62,6 @@ const layer = Layer.effect(
           toInject,
           (path) =>
             Effect.gen(function* () {
-              // The native cache is path-interned, so a hit means the file was already
-              // read this process and the disk read can be skipped. An undefined result
-              // is ambiguous (missing file, unreadable file, or no addon), so fall back
-              // to the filesystem read to keep today's behaviour intact.
-              const cached = OcNano.loadInstruction(path)
-              if (cached !== undefined) return { path, content: cached }
               const content = yield* fs.readFileStringSafe(path)
               if (content === undefined) return undefined
               return { path, content }

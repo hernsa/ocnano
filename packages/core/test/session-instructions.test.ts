@@ -256,7 +256,7 @@ describe("SessionInstructions", () => {
       }),
   )
 
-  it.live("re-injects nested instructions dropped from history by compaction", () =>
+  it.live("re-injects edited nested instructions after compaction", () =>
     Effect.gen(function* () {
       const location = yield* Location.Service
       const dir = location.directory
@@ -280,10 +280,12 @@ describe("SessionInstructions", () => {
       yield* bus.publish(SessionEvent.Compaction.Ended, { sessionID, reason: "manual", text: "summary" })
       expect(yield* synthetics(sessionID)).toHaveLength(0)
 
+      yield* writeAgents(subPath, "updated-sub-instructions")
       // The model no longer has the rules, so the next read under the subtree must
       // re-inject them rather than trusting a stale in-memory claim.
       yield* executeTool(registry, readCall(sessionID, "call-after", "sub/file.txt"))
       expect(yield* synthetics(sessionID)).toHaveLength(1)
+      expect((yield* synthetics(sessionID))[0]!.text).toContain("updated-sub-instructions")
     }),
   )
 

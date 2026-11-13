@@ -100,14 +100,8 @@ const materializeAttachment = Effect.fn("SessionPrompt.materializeAttachment")(f
   const ref = Schema.decodeUnknownOption(SessionStored.Ref)(input.uri)
   if (Option.isSome(ref)) {
     const blob = yield* readBlobAttachment(ref.value)
-    // A blob is named by the hash of its bytes, so the arena holds the same
-    // bytes the row holds and either copy encodes the same attachment.
-    const id = attachmentId(input.uri, undefined, undefined, "")
-    const cached = nativeCall(() => OcNano.getAttachment(id))
-    const bytes = cached ?? blob.data
-    if (cached === undefined) keepAttachment(conversation, id, bytes)
     return FileAttachment.create({
-      data: Base64.make(encodeBase64(bytes)),
+      data: Base64.make(encodeBase64(blob.data)),
       mime: blob.mime,
       source: input.source ?? { type: "inline" },
       name: input.name,
@@ -231,7 +225,7 @@ const readFileAttachment = Effect.fn("SessionPrompt.readFileAttachment")(functio
   // read once. The size and modification time are part of the id, so a file
   // edited since it was read is read again rather than served with its old
   // contents.
-  const id = attachmentId(uri, start, end, `${info.size}:${Option.getOrUndefined(info.mtime)?.getTime() ?? ""}`)
+  const id = attachmentId(target, undefined, undefined, `${info.size}:${Option.getOrUndefined(info.mtime)?.getTime() ?? ""}`)
   const cached = nativeCall(() => OcNano.getAttachment(id))
   if (cached)
     return { bytes: cached, source: { type: "uri" as const, uri }, start, end, name: path.basename(target), mime: undefined }
@@ -280,7 +274,7 @@ function attachmentId(uri: string, start: number | undefined, end: number | unde
   return `${uri}|${start ?? ""}|${end ?? ""}|${stamp}`
 }
 
-/** A stable handle for a Session, so the native arena groups its attachments under one conversation. */
+/** A stable handle for the native attachment API. */
 function conversationHandle(sessionID: string) {
   let hash = 0
   for (let index = 0; index < sessionID.length; index++)
@@ -288,25 +282,10 @@ function conversationHandle(sessionID: string) {
   return hash >>> 0
 }
 
-/**
- * The arena keeps every attachment it is given for the life of the process and
- * cannot evict one, so registrations are capped: past the budget the plain
- * filesystem path is used and nothing more is held.
- */
-const NATIVE_ATTACHMENT_BUDGET = 64 * 1024 * 1024
-const NATIVE_ATTACHMENT_LIMIT = 512
-const nativeAttachments = new Map<string, number>()
-let nativeAttachmentBytes = 0
-
-/** Keeps the bytes in the native arena, so the same attachment is read once. */
+/** Rust owns the bounded LRU and byte accounting; JavaScript retains no cache index. */
 function keepAttachment(conversation: number, id: string, bytes: Uint8Array) {
   if (!OcNano.available()) return
-  if (nativeAttachments.has(id)) return
-  if (nativeAttachments.size >= NATIVE_ATTACHMENT_LIMIT) return
-  if (nativeAttachmentBytes + bytes.byteLength > NATIVE_ATTACHMENT_BUDGET) return
-  if (!nativeCall(() => OcNano.putAttachment(conversation, id, bytes))) return
-  nativeAttachments.set(id, bytes.byteLength)
-  nativeAttachmentBytes += bytes.byteLength
+  nativeCall(() => OcNano.putAttachment(conversation, id, bytes))
 }
 
 /**
