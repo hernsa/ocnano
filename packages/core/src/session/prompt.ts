@@ -221,17 +221,16 @@ const readFileAttachment = Effect.fn("SessionPrompt.readFileAttachment")(functio
       uri,
       message: `Attachment exceeds the ${MAX_ATTACHMENT_BYTES} byte limit: ${uri}`,
     })
-  // The arena holds the bytes of an unchanged file, so a file attached again is
-  // read once. The size and modification time are part of the id, so a file
-  // edited since it was read is read again rather than served with its old
-  // contents.
-  const id = attachmentId(target, undefined, undefined, `${info.size}:${Option.getOrUndefined(info.mtime)?.getTime() ?? ""}`)
-  const cached = nativeCall(() => OcNano.getAttachment(id))
-  if (cached)
-    return { bytes: cached, source: { type: "uri" as const, uri }, start, end, name: path.basename(target), mime: undefined }
+  // Read the file once, then use a content hash as the cache stamp so that
+  // same-size edits preserving mtime are not served stale bytes.
   const bytes = yield* fs
     .readFile(target)
     .pipe(Effect.mapError(() => new AttachmentError({ uri, message: `Unable to read attachment: ${uri}` })))
+  const stamp = `${info.size}:${contentStamp(bytes)}`
+  const id = attachmentId(target, undefined, undefined, stamp)
+  const cached = nativeCall(() => OcNano.getAttachment(id))
+  if (cached)
+    return { bytes: cached, source: { type: "uri" as const, uri }, start, end, name: path.basename(target), mime: undefined }
   keepAttachment(conversation, id, bytes)
   return { bytes, source: { type: "uri" as const, uri }, start, end, name: path.basename(target), mime: undefined }
 })
@@ -272,6 +271,16 @@ function positiveInt(value: string | null) {
  */
 function attachmentId(uri: string, start: number | undefined, end: number | undefined, stamp: string) {
   return `${uri}|${start ?? ""}|${end ?? ""}|${stamp}`
+}
+
+/** Fast content hash used as the cache stamp: same bytes produce the same id. */
+function contentStamp(bytes: Uint8Array): string {
+  let hash = 2166136261
+  for (let i = 0; i < bytes.length; i++) {
+    hash ^= bytes[i]
+    hash = (hash * 16777619) >>> 0
+  }
+  return hash.toString(16)
 }
 
 /** A stable handle for the native attachment API. */
