@@ -7,11 +7,9 @@ import { blocks } from "~/lib/markdown"
  */
 export const glyphs = {
   o: { shadow: "M18 30H6V18H18V30Z", ink: "M18 12H6V30H18V12ZM24 36H0V6H24V36Z" },
-  p: { shadow: "M18 30H6V18H18V30Z", ink: "M6 30H18V12H6V30ZM24 36H6V42H0V6H24V36Z" },
-  e: { shadow: "M24 24V30H6V24H24Z", ink: "M24 24H6V30H24V36H0V6H24V24ZM6 18H18V12H6V18Z" },
-  n: { shadow: "M18 36H6V18H18V36Z", ink: "M18 12H6V36H0V6H18V12ZM24 36H18V12H24V36Z" },
   c: { shadow: "M24 30H6V18H24V30Z", ink: "M24 12H6V30H24V36H0V6H24V12Z" },
-  d: { shadow: "M18 30H6V18H18V30Z", ink: "M18 12H6V30H18V12ZM24 36H0V6H18V0H24V36Z" },
+  n: { shadow: "M18 36H6V18H18V36Z", ink: "M18 12H6V36H0V6H18V12ZM24 36H18V12H24V36Z" },
+  a: { shadow: "M12 22H18V26H12Z", ink: "M6 6H0V36H6V30H24V18H6ZM12 22H18V26H12Z" },
 } as const
 
 export type Letter = keyof typeof glyphs
@@ -24,20 +22,16 @@ export const isLetter = (value: string): value is Letter => Object.hasOwn(glyphs
  */
 export const modules: Record<Letter, string[]> = {
   o: ["....", "####", "#..#", "#++#", "#++#", "####", "...."],
-  p: ["....", "####", "#..#", "#++#", "#++#", "####", "#..."],
-  e: ["....", "####", "#..#", "####", "#+++", "####", "...."],
-  n: ["....", "###.", "#..#", "#++#", "#++#", "#++#", "...."],
   c: ["....", "####", "#...", "#+++", "#+++", "####", "...."],
-  d: ["...#", "####", "#..#", "#++#", "#++#", "####", "...."],
+  n: ["....", "###.", "#..#", "#++#", "#++#", "#++#", "...."],
+  a: ["....", ".##.", "#..#", "#++#", "#++#", "#..#", "...."],
 }
 
 export const glyphNames: Record<Letter, string> = {
   o: "Latin small letter o",
-  p: "Latin small letter p",
-  e: "Latin small letter e",
-  n: "Latin small letter n",
   c: "Latin small letter c",
-  d: "Latin small letter d",
+  n: "Latin small letter n",
+  a: "Latin small letter a",
 }
 
 /** How many modules of each tone a glyph uses. */
@@ -66,60 +60,31 @@ export function anchors(letter: Letter) {
 }
 
 /**
- * English words spelled with only c, d, e, n, o and p, picked from a dictionary filtered to those
+ * English words spelled with only c, n, o and a, picked from a dictionary filtered to those
  * letters. Longest first.
  */
 export const words = [
-  "dependence",
-  "deepened",
-  "depended",
-  "conceded",
-  "condoned",
   "ocnano",
-  "encoded",
-  "decoded",
-  "condone",
-  "concede",
-  "cocoon",
-  "opened",
-  "penned",
-  "deepen",
-  "depend",
-  "decode",
-  "encode",
-  "coded",
-  "ended",
-  "nonce",
-  "codon",
-  "pence",
-  "code",
-  "open",
-  "node",
-  "done",
-  "cone",
-  "deep",
-  "need",
-  "noon",
-  "neon",
-  "pond",
-  "once",
-  "none",
-  "coop",
-  "cope",
-  "dope",
-  "nope",
-  "deed",
-  "peep",
-  "pen",
-  "pod",
-  "den",
-  "end",
-  "one",
-  "nod",
-  "doc",
-  "cod",
-  "eon",
-  "pop",
+  "canon",
+  "cano",
+  "cona",
+  "nana",
+  "anoa",
+  "caon",
+  "coan",
+  "nano",
+  "con",
+  "can",
+  "onc",
+  "oca",
+  "aco",
+  "on",
+  "no",
+  "an",
+  "na",
+  "ca",
+  "ao",
+  "oa",
 ]
 
 /* Analysis. Everything below is derived from the outlines and the module maps above. */
@@ -241,7 +206,7 @@ export const subAnagrams = words.filter((word) => {
 })
 
 /** 8! / (2! × 2!): the o and the e appear twice. */
-export const arrangements = 10080
+export const arrangements = 24
 
 /**
  * The construction of one glyph, in milliseconds: the same numbers drive the animations and the
@@ -270,7 +235,7 @@ export const performance = {
   otf: 49208,
   gzip: 19832,
   brotli: 11091,
-  glyphs: 9,
+  glyphs: 7,
   codePoints: 4149,
 }
 
@@ -288,7 +253,7 @@ export const fontContent = {
   metaTitle: "OC Nano | Font, a typeface cut from the wordmark",
   description:
     "A six-letter typeface cut from the OC Nano wordmark on a 4 × 7 grid. Type with it, see how every letter is built, then download your own installable font.",
-  combinations: { base: "6", exponent: "3,591" },
+  combinations: { base: "4", exponent: "3,591" },
   download: "Download",
   plates: [
     { id: "cover", title: "Specimen" },

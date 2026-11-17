@@ -548,7 +548,7 @@ export function Tester() {
         </div>
         <div data-slot="tester-footer">
           <div data-slot="presets">
-            <For each={["ocnano", "dependence", "coded node", "open code done", "deep need"]}>
+            <For each={["ocnano", "canoe", "cona", "nana", "anoa", "onano"]}>
               {(preset) => (
                 <button type="button" onClick={() => update(preset)}>
                   {preset}

@@ -300,7 +300,7 @@ export function Analysis() {
 
 /** Plate: the kerning table, 36 pairs of zero. Hover or focus a pair to set it. */
 export function Kerning() {
-  const [pair, setPair] = createSignal<[Letter, Letter]>(["o", "d"])
+  const [pair, setPair] = createSignal<[Letter, Letter]>(["o", "a"])
   return (
     <Plate id="kerning" tone="ink" lead={fontContent.kerning.lead} aside="GPOS · kern · 0 entries">
       <div data-slot="kerning">

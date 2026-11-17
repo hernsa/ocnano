@@ -825,7 +825,7 @@ function CurvesScene(props: { c: Ctx }) {
 
 function PlotterScene(props: { c: Ctx }) {
   const c = props.c
-  const letter: Letter = "e"
+  const letter: Letter = "o"
   const m = Math.floor((c.H * (c.tall ? 0.6 : 0.8)) / 7)
   const gx = c.tall ? Math.round((c.W - 4 * m) / 2) : Math.round(c.W * 0.2)
   const gy = c.tall ? 50 : Math.round((c.H - 7 * m) / 2)

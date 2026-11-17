@@ -130,7 +130,7 @@ function shadowQuad(b: Block, grow: number) {
 /** Plate: one glyph's modules lifted into an isometric exploded view by a stated rule. */
 export function Exploded() {
   let section: HTMLDivElement | undefined
-  const [letter, setLetter] = createSignal<Letter>("e")
+  const [letter, setLetter] = createSignal<Letter>("a")
   const [rule, setRule] = createSignal<Rule>("row")
   // Starts fully exploded; scrolling through the pinned plate settles the modules flat.
   const [scroll, setScroll] = createSignal(1)

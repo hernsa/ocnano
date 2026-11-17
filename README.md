@@ -11,7 +11,7 @@
 <p align="center">
   <a href="https://opencode.ai/discord"><img alt="Discord" src="https://img.shields.io/discord/1391832426048651334?style=flat-square&label=discord" /></a>
   <a href="https://www.npmjs.com/package/@ocnano/cli"><img alt="npm" src="https://img.shields.io/npm/v/@ocnano/cli?style=flat-square" /></a>
-  <a href="https://github.com/anomalyco/opencode/actions/workflows/release.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/anomalyco/opencode/release.yml?style=flat-square&branch=dev" /></a>
+  <a href="https://github.com/hernsa/ocnano/actions/workflows/release.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/hernsa/ocnano/release.yml?style=flat-square&branch=dev" /></a>
 </p>
 
 <p align="center">
@@ -51,12 +51,12 @@ curl -fsSL https://opencode.ai/v2/install | bash
 
 # Package managers
 npm i -g @ocnano/cli@latest      # or bun/pnpm/yarn
-brew install anomalyco/tap/ocnano-v2 # macOS and Linux (recommended, always up to date)
+brew install hernsa/tap/ocnano-v2 # macOS and Linux (recommended, always up to date)
 brew install ocnano              # macOS and Linux (official brew formula, updated less)
 sudo pacman -S ocnano            # Arch Linux (Stable)
 paru -S ocnano-beta              # Arch Linux (Latest from AUR)
 mise use -g ocnano               # Any OS
-nix run github:anomalyco/opencode  # Nix
+nix run github:hernsa/ocnano  # Nix
 ```
 
 > [!TIP]
@@ -66,12 +66,12 @@ nix run github:anomalyco/opencode  # Nix
 
 OC Nano is also available as a desktop application. Download it from [opencode.ai/download](https://opencode.ai/download).
 
-| Platform              | Download                           |
-| --------------------- | ---------------------------------- |
-| macOS (Apple Silicon) | `ocnano-desktop-mac-arm64.dmg`   |
-| macOS (Intel)         | `ocnano-desktop-mac-x64.dmg`     |
-| Windows               | `ocnano-desktop-win-x64.exe`     |
-| Linux                 | `.deb`, `.rpm`, or `.AppImage`     |
+| Platform              | Download                       |
+| --------------------- | ------------------------------ |
+| macOS (Apple Silicon) | `ocnano-desktop-mac-arm64.dmg` |
+| macOS (Intel)         | `ocnano-desktop-mac-x64.dmg`   |
+| Windows               | `ocnano-desktop-win-x64.exe`   |
+| Linux                 | `.deb`, `.rpm`, or `.AppImage` |
 
 ```bash
 # macOS (Homebrew)

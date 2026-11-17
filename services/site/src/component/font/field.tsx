@@ -263,7 +263,7 @@ export function Field() {
         <canvas
           ref={canvas}
           role="img"
-          aria-label="A grid of the six letters o, p, e, n, c and d with ocnano spelled across the middle. Moving the pointer turns the letters around it over; clicking sends out a pulse."
+          aria-label="A grid of the four letters o, c, n and a with ocnano spelled across the middle. Moving the pointer turns the letters around it over; clicking sends out a pulse."
         />
       </div>
     </Plate>

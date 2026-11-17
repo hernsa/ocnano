@@ -212,7 +212,7 @@ export function ConstructionFigure(props: { letter: Letter; time: number; label?
 export function Construction() {
   let stage: HTMLDivElement | undefined
   const visible = useVisible(() => stage)
-  const [letter, setLetter] = createSignal<Letter>("d")
+  const [letter, setLetter] = createSignal<Letter>("o")
   const [playing, setPlaying] = createSignal(true)
   const [motion, setMotion] = createSignal(true)
   onMount(() => setMotion(!prefersReducedMotion()))
@@ -329,7 +329,7 @@ export function Timeline() {
   const longest = Math.max(...letters.map((letter) => constructionPhases(letter).at(-1)!.end))
   const ticks = Array.from({ length: Math.floor(longest / 500) + 1 }, (_, index) => index * 500)
   return (
-    <Plate id="timeline" lead={fontContent.timeline.lead} aside={`Total ${longest}ms · 6 tracks`}>
+    <Plate id="timeline" lead={fontContent.timeline.lead} aside={`Total ${longest}ms · ${letters.length} tracks`}>
       <div
         data-slot="gantt"
         ref={chart}

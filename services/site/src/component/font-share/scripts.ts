@@ -114,11 +114,11 @@ const coverScript: Script = (frame, setCursor) =>
     actions: [[1300, (ctx) => ctx.click()]],
   })
 
-const constructionLoop = constructionPhases("d").at(-1)!.end + 1800 + 400
+const constructionLoop = constructionPhases("o").at(-1)!.end + 1800 + 400
 
 const constructionScript: Script = (frame, setCursor) =>
   timeline(frame, setCursor, {
-    actions: [[0, (ctx) => ctx.click('[data-slot="construction-side"] [data-slot="letter-tabs"] button:nth-child(6)')]],
+    actions: [[0, (ctx) => ctx.click('[data-slot="construction-side"] [data-slot="letter-tabs"] button:nth-child(1)')]],
   })
 
 const timelineScript: Script = (frame, setCursor) =>
