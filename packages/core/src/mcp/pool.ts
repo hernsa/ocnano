@@ -5,6 +5,7 @@ import type { Mcp } from "@ocnano/schema/mcp"
 import { CrossSpawnSpawner } from "@ocnano/util/cross-spawn-spawner"
 import { makeGlobalNode } from "@ocnano/util/effect/app-node"
 import { httpFetch } from "@ocnano/util/effect/app-node-platform"
+import { acquireInstance, initPool, releaseInstance } from "../native/oc-nano.js"
 import { Cause, Context, Deferred, Effect, Exit, Fiber, FiberSet, Layer, Scope, Semaphore } from "effect"
 import { FetchHttpClient } from "effect/http"
 import { ChildProcessSpawner } from "effect/process/ChildProcessSpawner"
@@ -114,6 +115,11 @@ export const layer = Layer.effect(
     const host = Environment.Service.of({ files: Environment.makeFiles(driver), spawner: driver.spawner })
     const fetch = yield* FetchHttpClient.Fetch
     const slots = new Map<string, Slot>()
+    // Native pool mirror for TTL-bounded tracking of pooled instances. The JS
+    // Map stays the source of truth for live slots; the native pool bounds
+    // memory when it is available, falling back to unbounded JS growth when it
+    // is not.
+    const poolId = initPool(64, 300)
     // Keys whose server negotiated legacy or refused the pooled handshake. Kept for the life of the process.
     const unpoolable = new Set<string>()
     // The subset that negotiated legacy. Their private connections skip the 2026-07-28 probe; a refusal
@@ -200,6 +206,7 @@ export const layer = Layer.effect(
         }),
       }
       slots.set(key, slot)
+      acquireInstance(poolId, key, JSON.stringify({ name: input.name }), 300)
       return slot
     }
 
@@ -224,6 +231,7 @@ export const layer = Layer.effect(
     const detach = (key: string, slot: Slot) => {
       if (slots.get(key) !== slot) return
       slots.delete(key)
+      releaseInstance(poolId, key)
     }
 
     // Closes as soon as the last holder lets go, interrupting a start nobody waits for anymore.
