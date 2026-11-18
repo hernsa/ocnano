@@ -82,6 +82,21 @@ brew install --cask ocnano-desktop
 
 The install script installs OC Nano to `$HOME/.ocnano/bin`.
 
+### OC Nano Native Addon (`oc-nano`)
+
+OC Nano includes a Rust native addon ([github.com/hernsa/oc-nano](https://github.com/hernsa/oc-nano)) that replaces six memory-hot paths in the TypeScript core. It is bundled with the desktop app and CLI as `oc_nano_native.node` and loads lazily via `packages/core/src/native/oc-nano-binding.ts`. When the addon is present, memory usage drops substantially; when it is missing, OC Nano falls back to the pure-JS implementations gracefully.
+
+| Hot path | Optimization |
+|----------|-------------|
+| Attachments (`session/prompt.ts`) | Native attachment arena keyed by `uri\|start\|end\|size:mtime`, bounded to an 8 MiB byte budget + 128-entry LRU (was unbounded, retained every payload forever) |
+| History compaction (`session/compaction.ts`) | `flattenPlan` + `renderPlan` (size-independent, byte-identical); precomputed plans LRU-capped at 64 (was re-materialising full history each iteration) |
+| Tool schemas (`core/tool.ts`) | Native schema cache keyed by `(model, tool_set_hash)` with 300s TTL (was re-derived every turn) |
+| Instructions (`session/instructions.ts`) | Native path-interned `instructions_load` (was unbounded concurrent file reads, could serve stale copies) |
+| MCP pool (`core/mcp/pool.ts`) | Native LRU+TTL additive mirror (JS maps remain source of truth) |
+| SQLite (`core/database/database.ts`) | `PRAGMA cache_size` reduced from `-64000` (64 MiB/conn) to `-8192` (8 MiB/conn) |
+
+Measured on an isolated process with 200 attachments of 1 MiB each: the bounded addon retains **8 MiB live** vs **unbounded** on the old build, cutting RSS delta from **+262.3 MiB** to **+70.6 MiB** (~3.7x less).
+
 ### Agents
 
 OC Nano includes two built-in agents you can switch between with the `Tab` key.
