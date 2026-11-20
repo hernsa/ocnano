@@ -2,7 +2,7 @@
 
 ## Sources
 
-- PR #9817: https://github.com/anomalyco/opencode/pull/9817
+- PR #9817: https://github.com/hernsa/ocnano/pull/9817
 
 ## Do Not Translate (Locale Additions)
 
@@ -25,3 +25,4 @@ No PR-backed term mappings yet. Add entries here when review PRs introduce repea
 
 - Avoid translating product and protocol names that are fixed identifiers
 - Avoid mixing multiple German terms for the same recurring UI action once a preferred term is established
+

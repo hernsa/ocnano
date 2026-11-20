@@ -5,7 +5,7 @@ edition = "2024"
 rust-version = "1.90"
 description = "Persistent PTY service for OC Nano"
 license = "MIT"
-repository = "https://github.com/anomalyco/opencode"
+repository = "https://github.com/hernsa/ocnano"
 links = "ghostty-vt"
 
 [dependencies]
@@ -43,3 +43,4 @@ windows-sys = { version = "0.61.2", features = ["Win32_System_Console", "Win32_S
 codegen-units = 1
 lto = "thin"
 strip = "symbols"
+

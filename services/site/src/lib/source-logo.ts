@@ -63,10 +63,11 @@ ${installRows}
   └── Try            ocnano.try() for OC Nano Lite, nothing to install
 
   BUGS
-  ├── Report         github.com/anomalyco/opencode/issues/new
+  ├── Report         github.com/hernsa/ocnano/issues/new
   ├── Include        what you saw, the steps, your OS and terminal
   ├── Version        ocnano -v
   ├── Logs           ocnano debug paths log
   └── Security       /.well-known/security.txt for vulnerabilities
 
 -->`
+

@@ -149,7 +149,7 @@ for (const target of targets) {
         name: `@ocnano/${name}`,
         version: Script.version,
         license: pkg.license,
-        repository: { type: "git", url: "git+https://github.com/anomalyco/opencode.git" },
+        repository: { type: "git", url: "git+https://github.com/hernsa/ocnano.git" },
         os: [target.platform],
         cpu: [target.arch],
       },
@@ -247,3 +247,4 @@ function run(command: string, args: readonly string[], cwd = dir) {
   if (result.error) throw result.error
   if (result.status !== 0) throw new Error(`${command} exited with status ${result.status ?? "unknown"}`)
 }
+

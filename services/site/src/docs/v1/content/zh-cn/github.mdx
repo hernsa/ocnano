@@ -64,7 +64,7 @@ ocnano github install
              persist-credentials: false
 
          - name: Run OC Nano
-           uses: anomalyco/opencode/github@latest
+           uses: hernsa/ocnano/github@latest
            env:
              ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
            with:
@@ -138,7 +138,7 @@ jobs:
           persist-credentials: false
 
       - name: Run OC Nano
-        uses: anomalyco/opencode/github@latest
+        uses: hernsa/ocnano/github@latest
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         with:
@@ -175,7 +175,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
-      - uses: anomalyco/opencode/github@latest
+      - uses: hernsa/ocnano/github@latest
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -231,7 +231,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: anomalyco/opencode/github@latest
+      - uses: hernsa/ocnano/github@latest
         if: steps.check.outputs.result == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -253,7 +253,7 @@ jobs:
 覆盖默认提示词，以便为你的工作流自定义 OC Nano 的行为。
 
 ```yaml title=".github/workflows/ocnano.yml"
-- uses: anomalyco/opencode/github@latest
+- uses: hernsa/ocnano/github@latest
   with:
     model: anthropic/claude-sonnet-5-5
     prompt: |
@@ -317,3 +317,4 @@ jobs:
   - 行号信息
 
   这样你就可以提出更有针对性的请求，而无需手动指定文件路径或行号。
+

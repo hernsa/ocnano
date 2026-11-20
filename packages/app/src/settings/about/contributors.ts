@@ -13,7 +13,7 @@ export function otherContributorCount(link: string | null) {
 }
 
 export function loadOtherContributorCount(fetcher: typeof fetch) {
-  request ??= fetcher("https://api.github.com/repos/anomalyco/opencode/contributors?anon=1&per_page=1", {
+  request ??= fetcher("https://api.github.com/repos/hernsa/ocnano/contributors?anon=1&per_page=1", {
     headers: {
       Accept: "application/vnd.github+json",
       "X-GitHub-Api-Version": "2022-11-28",
@@ -25,3 +25,4 @@ export function loadOtherContributorCount(fetcher: typeof fetch) {
 
   return request
 }
+

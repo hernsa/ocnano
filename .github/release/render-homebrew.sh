@@ -12,7 +12,7 @@ cat > "$tap/ocnano-v2.rb" <<FORMULA
 
 class OpencodeV2 < Formula
   desc "OC Nano V2 - the AI coding agent for the terminal"
-  homepage "https://github.com/anomalyco/opencode"
+  homepage "https://github.com/hernsa/ocnano"
   version "$OCNANO_VERSION"
   license "MIT"
 
@@ -45,3 +45,4 @@ class OpencodeV2 < Formula
 end
 FORMULA
 cat "$tap/ocnano-v2.rb"
+

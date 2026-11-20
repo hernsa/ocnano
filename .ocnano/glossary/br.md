@@ -2,7 +2,7 @@
 
 ## Sources
 
-- PR #10086: https://github.com/anomalyco/opencode/pull/10086
+- PR #10086: https://github.com/hernsa/ocnano/pull/10086
 
 ## Do Not Translate (Locale Additions)
 
@@ -32,3 +32,4 @@ These are PR-backed locale naming preferences and may evolve.
 
 - Avoid changing repo locale code references from `br` to `pt-br` in code snippets, paths, or config examples
 - Avoid mixing Portuguese variants when a Brazilian Portuguese form is established
+

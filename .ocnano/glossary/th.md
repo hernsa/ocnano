@@ -2,8 +2,8 @@
 
 ## Sources
 
-- PR #10809: https://github.com/anomalyco/opencode/pull/10809
-- PR #11496: https://github.com/anomalyco/opencode/pull/11496
+- PR #10809: https://github.com/hernsa/ocnano/pull/10809
+- PR #11496: https://github.com/hernsa/ocnano/pull/11496
 
 ## Do Not Translate (Locale Additions)
 
@@ -32,3 +32,4 @@ These are PR-backed preferences and may evolve.
 
 - Avoid translating language names differently per current locale in language lists
 - Avoid changing `ไทย` to another display form for the Thai language option unless the product standard changes
+

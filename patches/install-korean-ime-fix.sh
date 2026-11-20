@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # opencode Korean IME Fix Installer
-# https://github.com/anomalyco/opencode/issues/14371
+# https://github.com/hernsa/ocnano/issues/14371
 #
 # Patches opencode to prevent Korean (and other CJK) IME last character
 # truncation when pressing Enter in Kitty and other terminals.
@@ -118,3 +118,4 @@ echo "  curl -fsSL https://opencode.ai/install | bash"
 echo ""
 info "To update (re-pull and rebuild):"
 echo "  $0"
+

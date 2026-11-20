@@ -7,7 +7,7 @@ Status: **terminal is automated** (`script/capture-assets.ts`). The other surfac
 
 ## 1. Current assets (Nov 2 2026)
 
-Latest release: **v2.2.5** (Oct 30 2026). Source: `gh api 'repos/anomalyco/opencode/releases?per_page=8'`.
+Latest release: **v2.2.5** (Oct 30 2026). Source: `gh api 'repos/hernsa/ocnano/releases?per_page=8'`.
 
 | Used on                     | File                                                                   | Source                                                                         | Shows                                                                                                                           | Size                       | Mode | Problem                                                                                      |
 | --------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------- | ---- | -------------------------------------------------------------------------------------------- |
@@ -124,7 +124,7 @@ Until then, the web capture with the desktop window chrome (vertical tabs, title
 
 ### Mobile: iOS Simulator (not automated yet)
 
-The `real-ios` recording builds `anomalyco/opencode-ios` in the simulator, drives it with XCUITest and talks to a local demo server with the stub model. For stills:
+The `real-ios` recording builds `hernsa/ocnano-ios` in the simulator, drives it with XCUITest and talks to a local demo server with the stub model. For stills:
 
 ```sh
 xcrun simctl boot "iPhone 17 Pro"
@@ -239,3 +239,4 @@ Show it under the Screenshots title on /brand, next to "Download all" on /press,
 2. **Desktop: launch flags** for user-data folder, theme mode and onboarding.
 3. **App: export the e2e mock server** as a fixture package.
 4. **iOS: a `ScreenshotTests` target** that uses a launch argument for the demo server URL.
+

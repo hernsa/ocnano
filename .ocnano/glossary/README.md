@@ -33,7 +33,7 @@ Prefer guidance that is:
 
 ## Sources
 
-- PR #12345: https://github.com/anomalyco/opencode/pull/12345
+- PR #12345: https://github.com/hernsa/ocnano/pull/12345
 
 ## Do Not Translate (Locale Additions)
 
@@ -61,3 +61,4 @@ Prefer guidance that is:
 - Keep examples short
 - Add or update the `Sources` section whenever you add a new rule
 - Prefer PR-backed guidance over invented term mappings; start with general guidance if no term-level corrections exist yet
+

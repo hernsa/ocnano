@@ -11,7 +11,7 @@
 <p align="center">
   <a href="https://opencode.ai/discord"><img alt="Discord" src="https://img.shields.io/discord/1391832426048651334?style=flat-square&label=discord" /></a>
   <a href="https://www.npmjs.com/package/@ocnano/cli"><img alt="npm" src="https://img.shields.io/npm/v/@ocnano/cli?style=flat-square" /></a>
-  <a href="https://github.com/anomalyco/opencode/actions/workflows/release.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/anomalyco/opencode/release.yml?style=flat-square&branch=dev" /></a>
+  <a href="https://github.com/hernsa/ocnano/actions/workflows/release.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/hernsa/ocnano/release.yml?style=flat-square&branch=dev" /></a>
 </p>
 
 <p align="center">
@@ -56,7 +56,7 @@ brew install ocnano              # macOS и Linux (официальная фор
 sudo pacman -S ocnano            # Arch Linux (Stable)
 paru -S ocnano-beta              # Arch Linux (Latest from AUR)
 mise use -g ocnano               # любая ОС
-nix run github:anomalyco/opencode  # Nix
+nix run github:hernsa/ocnano  # Nix
 ```
 
 > [!TIP]
@@ -112,3 +112,4 @@ brew install --cask ocnano-desktop
 ---
 
 **Присоединяйтесь к нашему сообществу** [Discord](https://discord.gg/ocnano) | [X.com](https://x.com/ocnano)
+

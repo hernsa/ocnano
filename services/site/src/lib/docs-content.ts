@@ -164,7 +164,7 @@ export const docsIntro = {
   },
   docker: [
     "Docker images use versioned tags, for example ",
-    { code: "ghcr.io/anomalyco/opencode:2.0.0" },
+    { code: "ghcr.io/hernsa/ocnano:2.0.0" },
     ".",
   ] satisfies RichText,
   connect: [
@@ -251,3 +251,4 @@ export function docsMarkdown() {
 
 /** The docs' own llms.txt, which the docs serve under /docs on opencode.ai. */
 export const docsLlms = "/docs/llms.txt"
+

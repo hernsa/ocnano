@@ -100,7 +100,7 @@ export function SettingsAbout(props: { active: boolean }) {
 
   const writerCredits = () => [
     ...writers.map(credit),
-    <ExternalLink href="https://github.com/anomalyco/opencode/graphs/contributors">
+    <ExternalLink href="https://github.com/hernsa/ocnano/graphs/contributors">
       {language.plural("settings.about.otherContributor", otherContributors.latest, {
         count: otherContributors.latest,
       })}
@@ -197,3 +197,4 @@ function profile(name: string) {
 
   return `https://github.com/${name}`
 }
+

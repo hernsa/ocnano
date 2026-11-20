@@ -50,7 +50,7 @@ duplicate the notification.
 | Background marker    | completed, unacknowledged | absent                      |
 
 The dynamic hold tool avoids the static adapter loading issue in
-[ocnano-drive#116](https://github.com/anomalyco/opencode-drive/issues/116).
+[ocnano-drive#116](https://github.com/hernsa/ocnano-drive/issues/116).
 
 ## History
 
@@ -67,3 +67,4 @@ The dynamic hold tool avoids the static adapter loading issue in
 This is source-history attribution of the lifetime mismatch, not a claim that
 every historical revision has been executed. The before proof runs V2
 `93a7c8404fdc4fdb182eb6bbef7d925cb81e8306`.
+

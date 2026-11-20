@@ -151,7 +151,7 @@ const page = `<!doctype html>
       <nav>
         <a href="https://opencode.ai">Home</a>
         <a href="https://opencode.ai/docs">Docs</a>
-        <a href="https://github.com/anomalyco/opencode">GitHub</a>
+        <a href="https://github.com/hernsa/ocnano">GitHub</a>
         <a href="https://opencode.ai/discord">Discord</a>
       </nav>
     </main>
@@ -169,3 +169,4 @@ export default new Hono()
   .post("/api/share/:shareID/sync", (c) => c.json({}))
   .delete("/api/share/:shareID", (c) => c.json({}))
   .all("*", (c) => c.html(page, 410))
+

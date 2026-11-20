@@ -2,7 +2,7 @@
 
 ## Sources
 
-- PR #13942: https://github.com/anomalyco/opencode/pull/13942
+- PR #13942: https://github.com/hernsa/ocnano/pull/13942
 
 ## Do Not Translate (Locale Additions)
 
@@ -40,3 +40,4 @@ These are preferred terms for docs/UI prose and may evolve.
 
 - Avoid `ocnano` in prose when referring to the product name; use `OC Nano`
 - Avoid mixing alternative terms for the same concept across docs when a preferred term is already established
+

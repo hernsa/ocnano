@@ -89,7 +89,7 @@ function toReleases(releases: Release[]): ChangelogRelease[] {
 async function fetchReleasePage(page: number): Promise<Release[] | undefined> {
   const { githubFetch } = await githubApi()
   const response = await githubFetch(
-    `https://api.github.com/repos/anomalyco/opencode/releases?per_page=100&page=${page}`,
+    `https://api.github.com/repos/hernsa/ocnano/releases?per_page=100&page=${page}`,
     {
       cf: {
         // best-effort edge caching (ignored outside Cloudflare)
@@ -206,3 +206,4 @@ function parseMarkdown(body: string) {
   if (current) sections.push(current)
   return { sections, highlights: parseHighlights(body) }
 }
+

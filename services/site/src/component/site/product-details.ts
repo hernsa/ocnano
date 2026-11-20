@@ -104,7 +104,7 @@ export const productDetails: Record<
     intro:
       "Start and steer sessions from your phone, wherever you are. Call a session and talk to the agent, or open any session to pick up where you left off, all on OC Nano running on your own computer.",
     // The page shows only its four clips for now (5 Nov 2026). The grid's points, checked against
-    // the iOS app's What's New entries (anomalyco/opencode-ios), are kept here to bring back:
+    // the iOS app's What's New entries (hernsa/ocnano-ios), are kept here to bring back:
     // "Every computer" takes two taps (the drawer title, then the server), and muting leaves
     // notifications on (it skips Catch Up, the unread dot and the badge), so both need new copy.
     // { title: "Notify when done", body: "Get a short summary when a session you started finishes." },
@@ -221,3 +221,4 @@ export const productDetails: Record<
     showcase: [],
   },
 }
+

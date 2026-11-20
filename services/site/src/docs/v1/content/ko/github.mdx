@@ -64,7 +64,7 @@ ocnano github install
              persist-credentials: false
 
          - name: Run OC Nano
-           uses: anomalyco/opencode/github@latest
+           uses: hernsa/ocnano/github@latest
            env:
              ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
            with:
@@ -138,7 +138,7 @@ jobs:
           persist-credentials: false
 
       - name: Run OC Nano
-        uses: anomalyco/opencode/github@latest
+        uses: hernsa/ocnano/github@latest
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         with:
@@ -175,7 +175,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
-      - uses: anomalyco/opencode/github@latest
+      - uses: hernsa/ocnano/github@latest
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -231,7 +231,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: anomalyco/opencode/github@latest
+      - uses: hernsa/ocnano/github@latest
         if: steps.check.outputs.result == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -253,7 +253,7 @@ jobs:
 기본 prompt를 override해 워크플로에 맞게 OC Nano 동작을 커스터마이즈할 수 있습니다.
 
 ```yaml title=".github/workflows/ocnano.yml"
-- uses: anomalyco/opencode/github@latest
+- uses: hernsa/ocnano/github@latest
   with:
     model: anthropic/claude-sonnet-5-5
     prompt: |
@@ -317,3 +317,4 @@ jobs:
   - 라인 번호 정보
 
   따라서 파일 경로나 라인 번호를 직접 적지 않아도 더 정밀하게 요청할 수 있습니다.
+

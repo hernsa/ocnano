@@ -28,7 +28,7 @@ const v1ConfigValues = {
   url: "https://opencode.ai",
   console: "https://opencode.ai/auth",
   email: "help@anoma.ly",
-  github: "https://github.com/anomalyco/opencode",
+  github: "https://github.com/hernsa/ocnano",
   discord: "https://opencode.ai/discord",
 }
 
@@ -134,3 +134,4 @@ function v1Markdown(body: string) {
   })
   return lines.join("\n").trim()
 }
+

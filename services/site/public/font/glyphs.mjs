@@ -1,5 +1,5 @@
 // Normalized outlines from the official OcNano SVG wordmark (24 × 42).
-// https://github.com/anomalyco/opencode/blob/dev/packages/ui/src/components/logo.tsx
+// https://github.com/hernsa/ocnano/blob/dev/packages/ui/src/components/logo.tsx
 export const GLYPHS = {
   o: { shadow: "M18 30H6V18H18V30Z", ink: "M18 12H6V30H18V12ZM24 36H0V6H24V36Z" },
   c: { shadow: "M24 30H6V18H24V30Z", ink: "M24 12H6V30H24V36H0V6H24V12Z" },
@@ -9,3 +9,4 @@ export const GLYPHS = {
     ink: "M6 6H0V36H6V30H24V18H6ZM12 22H18V26H12Z",
   },
 }
+

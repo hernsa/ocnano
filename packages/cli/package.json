@@ -84,7 +84,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/anomalyco/opencode.git",
+    "url": "git+https://github.com/hernsa/ocnano.git",
     "directory": "packages/cli"
   }
 }
+

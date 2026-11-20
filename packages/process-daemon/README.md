@@ -1,6 +1,6 @@
 # opencode-pty
 
-Moved from [anomalyco/opencode-pty](https://github.com/anomalyco/opencode-pty)
+Moved from [hernsa/ocnano-pty](https://github.com/hernsa/ocnano-pty)
 (at 443945a, v0.3.1). It lives in the OC Nano monorepo at
 `packages/process-daemon`; run the commands below from that directory.
 
@@ -349,16 +349,16 @@ forced-exit deadline does not prove that those worker threads were joined.
 The workflow can also be run manually against a branch:
 
 ```sh
-gh workflow run check-process-daemon.yml --repo anomalyco/opencode --ref BRANCH
-gh run list --repo anomalyco/opencode --workflow check-process-daemon.yml --branch BRANCH
-gh run view RUN_ID --repo anomalyco/opencode --log-failed
+gh workflow run check-process-daemon.yml --repo hernsa/ocnano --ref BRANCH
+gh run list --repo hernsa/ocnano --workflow check-process-daemon.yml --branch BRANCH
+gh run view RUN_ID --repo hernsa/ocnano --log-failed
 ```
 
 ## Releases
 
 Releases are built by
 [`.github/workflows/release-process-daemon.yml`](../../.github/workflows/release-process-daemon.yml)
-in anomalyco/opencode. To release version `X.Y.Z`:
+in hernsa/ocnano. To release version `X.Y.Z`:
 
 1. Bump `version` in `Cargo.toml` (and `Cargo.lock`), and `version` plus every
    `optionalDependencies` entry in `npm/package.json`, to `X.Y.Z`. The workflow
@@ -393,7 +393,7 @@ import { binaryPath } from "@ocnano/pty"
 
 npm publishing uses trusted publishing with provenance. Each of the nine
 packages (`@ocnano/pty` and the eight `@opencode/pty-<platform>`
-packages) must list anomalyco/opencode with workflow
+packages) must list hernsa/ocnano with workflow
 `release-process-daemon.yml` as its trusted publisher, with no environment
 (the release job does not use one).
 
@@ -414,3 +414,4 @@ Platform signing will be added later.
 - Child process-tree cleanup is not complete beyond portable-pty's root killer.
 - Cold-client checkpoint transport is not implemented.
 - A service-process crash loses all terminals by design.
+

@@ -13,7 +13,7 @@ import { siteSettings } from "./settings"
 // after `gh repo fork --clone`. Output lines are what gh and git print (gh's "✓" marks left out: OpenTUI
 // Mono has no check mark); comments explain.
 const transcript = [
-  { kind: "command", text: "gh repo fork anomalyco/opencode --clone" },
+  { kind: "command", text: "gh repo fork hernsa/ocnano --clone" },
   { kind: "output", text: "Created fork you/ocnano" },
   { kind: "output", text: "Cloning into 'ocnano'..." },
   { kind: "output", text: "Cloned fork" },
@@ -127,3 +127,4 @@ export function OpenSourceFork() {
     </div>
   )
 }
+

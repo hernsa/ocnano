@@ -21,16 +21,16 @@ await packDistribution({
   command: "ocnano",
   legacyCommand: "ocnano2",
   binary: "ocnano",
-  packagePrefix: "@opencode/cli-",
+  packagePrefix: "@ocnano/cli-",
   archive: (target) => target.startsWith("linux-"),
 })
 if (existsSync(path.join(root, "node"))) {
   await packDistribution({
     root: path.join(root, "node"),
-    name: "@opencode/cli-node",
+    name: "@ocnano/cli-node",
     command: "ocnano2-node",
     binary: "ocnano2-node",
-    packagePrefix: "@opencode/cli-node-",
+    packagePrefix: "@ocnano/cli-node-",
     archive: () => true,
   })
 }
@@ -88,7 +88,7 @@ async function packDistribution(input: {
         scripts: { postinstall: "node ./postinstall.mjs" },
         version,
         license: pkg.license,
-        repository: { type: "git", url: "git+https://github.com/anomalyco/opencode.git" },
+        repository: { type: "git", url: "git+https://github.com/hernsa/ocnano.git" },
         os: ["darwin", "linux", "win32"],
         cpu: ["arm64", "x64"],
         optionalDependencies: binaries,
@@ -137,3 +137,4 @@ async function archive(bin: string, target: string, binary: string) {
   if (extension === "zip") await $`zip -X -q ${output} ${executable}`.cwd(bin)
   return output
 }
+

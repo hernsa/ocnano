@@ -9,7 +9,7 @@ export const config = {
 
   // GitHub
   github: {
-    repoUrl: "https://github.com/anomalyco/opencode",
+    repoUrl: "https://github.com/hernsa/ocnano",
     starsFormatted: {
       compact: "220K",
       full: "220,000",
@@ -30,3 +30,4 @@ export const config = {
     monthlyUsers: "22M",
   },
 } as const
+

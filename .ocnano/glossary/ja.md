@@ -2,8 +2,8 @@
 
 ## Sources
 
-- PR #9821: https://github.com/anomalyco/opencode/pull/9821
-- PR #13160: https://github.com/anomalyco/opencode/pull/13160
+- PR #9821: https://github.com/hernsa/ocnano/pull/9821
+- PR #13160: https://github.com/hernsa/ocnano/pull/13160
 
 ## Do Not Translate (Locale Additions)
 
@@ -31,3 +31,4 @@ These are PR-backed wording preferences and may evolve.
 
 - Avoid `WSL統合` in the WSL integration UI context where `WSL連携` is the reviewed wording
 - Avoid translating product and protocol names that are fixed identifiers
+

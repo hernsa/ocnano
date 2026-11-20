@@ -10,7 +10,7 @@ const args = parseArgs({
   options: {
     manifest: { type: "string", default: "public/product-assets/manifest.json" },
     "max-behind": { type: "string", default: "3" },
-    repo: { type: "string", default: "anomalyco/opencode" },
+    repo: { type: "string", default: "hernsa/ocnano" },
   },
 }).values
 
@@ -59,3 +59,4 @@ function fail(message: string): never {
   console.error(`error: ${message}`)
   process.exit(1)
 }
+

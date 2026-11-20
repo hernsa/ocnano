@@ -64,7 +64,7 @@ Ou você pode configurá-lo manualmente.
              persist-credentials: false
 
          - name: Run OC Nano
-           uses: anomalyco/opencode/github@latest
+           uses: hernsa/ocnano/github@latest
            env:
              ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
            with:
@@ -138,7 +138,7 @@ jobs:
           persist-credentials: false
 
       - name: Run OC Nano
-        uses: anomalyco/opencode/github@latest
+        uses: hernsa/ocnano/github@latest
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         with:
@@ -175,7 +175,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
-      - uses: anomalyco/opencode/github@latest
+      - uses: hernsa/ocnano/github@latest
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -231,7 +231,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: anomalyco/opencode/github@latest
+      - uses: hernsa/ocnano/github@latest
         if: steps.check.outputs.result == 'true'
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -253,7 +253,7 @@ Para eventos de `issues`, a entrada `prompt` é **obrigatória** uma vez que nã
 Substitua o prompt padrão para personalizar o comportamento do ocnano para seu fluxo de trabalho.
 
 ```yaml title=".github/workflows/ocnano.yml"
-- uses: anomalyco/opencode/github@latest
+- uses: hernsa/ocnano/github@latest
   with:
     model: anthropic/claude-sonnet-5-5
     prompt: |
@@ -317,3 +317,4 @@ Aqui estão alguns exemplos de como você pode usar o ocnano no GitHub.
   - Informações sobre números de linha
 
   Isso permite solicitações mais direcionadas sem precisar especificar caminhos de arquivos ou números de linhas manualmente.
+

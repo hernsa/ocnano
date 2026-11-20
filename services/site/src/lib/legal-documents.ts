@@ -49,7 +49,7 @@ export function legalHubMarkdown(context: MarkdownContext) {
     [
       `[Follow changes by RSS](${absoluteUrl("/legal/feed.xml")})`,
       `[Brand and trademark guidelines](${absoluteUrl(context.route("/brand"))})`,
-      "[Open source license (MIT)](https://github.com/anomalyco/opencode/blob/dev/LICENSE)",
+      "[Open source license (MIT)](https://github.com/hernsa/ocnano/blob/dev/LICENSE)",
     ].join(" · "),
   )
 }
@@ -67,3 +67,4 @@ export function legalSearch() {
     headings: legalHeadings(document),
   }))
 }
+

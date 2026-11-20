@@ -26,7 +26,7 @@ export async function resolveOpencodePty(target: Target): Promise<OpencodePtyAss
     .filter(Boolean)
     .map((value) => (value === "glibc" ? "gnu" : value))
     .join("-")
-  const name = `@opencode/pty-${suffix}`
+  const name = `@ocnano/pty-${suffix}`
   const local = process.env.OCNANO_PTY_BIN
   if (local && (target.platform !== process.platform || target.arch !== process.arch))
     throw new Error("OCNANO_PTY_BIN can only be embedded in a build for the current platform and architecture")
@@ -47,3 +47,4 @@ export async function resolveOpencodePty(target: Target): Promise<OpencodePtyAss
       .digest("hex"),
   }
 }
+

@@ -81,7 +81,7 @@ if (!skipInstall) {
   ).version as string
 
   // Bun 1.4.4 skips native packages for the other libc by default, but the musl targets need them.
-  await $`bun install --os="*" --cpu="*" --libc="*" @opentui/core@${pkg.dependencies["@opentui/core"]} @opencode/pty@${ptyVersion}`
+  await $`bun install --os="*" --cpu="*" --libc="*" @opentui/core@${pkg.dependencies["@opentui/core"]} @ocnano/pty@${ptyVersion}`
 }
 const appArchive = path.join(dir, ".cache", "bun-app-archive.bin")
 await Bun.write(appArchive, await buildAppArchive(Script.channel, Script.version, { skipBuild: skipWebUi }))
@@ -256,7 +256,7 @@ export default { path: file, version: ${JSON.stringify(ocnanoPty.version)}, sha2
         name: `@ocnano/${name}`,
         version: Script.version,
         license: "MIT",
-        repository: { type: "git", url: "git+https://github.com/anomalyco/opencode.git" },
+        repository: { type: "git", url: "git+https://github.com/hernsa/ocnano.git" },
         os: [item.os],
         cpu: [item.arch],
       },
@@ -367,3 +367,5 @@ function targetName(item: (typeof allTargets)[number]) {
     .filter(Boolean)
     .join("-")
 }
+
+

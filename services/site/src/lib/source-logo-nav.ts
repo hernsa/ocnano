@@ -72,7 +72,8 @@ export function forHumansRows() {
       `  ├── ${row.label.padEnd(15)}${row.description ? row.href.padEnd(path) + row.description : row.href}`.trimEnd(),
     ),
     "  │",
-    "  ├── Source         https://github.com/anomalyco/opencode",
-    "  └── Contribute     https://github.com/anomalyco/opencode/blob/dev/CONTRIBUTING.md",
+    "  ├── Source         https://github.com/hernsa/ocnano",
+    "  └── Contribute     https://github.com/hernsa/ocnano/blob/dev/CONTRIBUTING.md",
   ].join("\n")
 }
+

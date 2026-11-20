@@ -8,7 +8,7 @@ import { faces } from "../src/lib/contributor-faces"
 import type { GithubSnapshot } from "../src/lib/github-snapshot"
 
 const root = path.resolve(import.meta.dir, "..")
-const api = "https://api.github.com/repos/anomalyco/opencode"
+const api = "https://api.github.com/repos/hernsa/ocnano"
 const headers = {
   Accept: "application/vnd.github+json",
   "User-Agent": "OcNano-Console",
@@ -55,3 +55,4 @@ const snapshot = {
 }
 await Bun.write(file, JSON.stringify(snapshot) + "\n")
 console.log(`github snapshot: ${snapshot.repo.stars ?? "no"} stars, ${snapshot.releases?.length ?? "no"} releases`)
+

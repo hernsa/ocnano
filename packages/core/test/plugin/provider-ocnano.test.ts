@@ -1224,7 +1224,7 @@ describe("OpencodePlugin", () => {
                 providerID: state.providerID,
                 results: [
                   {
-                    url: "https://github.com/anomalyco/opencode",
+                    url: "https://github.com/hernsa/ocnano",
                     title: "OC Nano",
                     content: "Open source AI coding agent.",
                     time: { published: 1_700_000_000_000 },
@@ -1266,7 +1266,7 @@ describe("OpencodePlugin", () => {
               providerID: WebSearch.ID.make("ocnano"),
               results: [
                 {
-                  url: "https://github.com/anomalyco/opencode",
+                  url: "https://github.com/hernsa/ocnano",
                   title: "OC Nano",
                   content: "Open source AI coding agent.",
                   time: { published: 1_700_000_000_000 },
@@ -2586,3 +2586,4 @@ for (const key of [undefined, "secret"]) {
       ),
   )
 }
+

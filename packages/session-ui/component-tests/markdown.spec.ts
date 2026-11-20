@@ -303,7 +303,7 @@ story("shows a stable GitHub mark without changing link text or other sites", as
     const { mountMarkdown } = await import(fixture)
     await mountMarkdown({
       text: [
-        "[#540](https://github.com/anomalyco/opencode/pull/540)",
+        "[#540](https://github.com/hernsa/ocnano/pull/540)",
         "[GitHub](https://github.com)",
         "[other site](https://example.com/docs)",
         "[lookalike](https://github.com.evil.example/pull/540)",
@@ -315,7 +315,7 @@ story("shows a stable GitHub mark without changing link text or other sites", as
   const markdown = page.getByTestId("markdown-fixture").locator('[data-component="markdown"]')
   await expect(markdown).toHaveAttribute("data-markdown-ready", "")
   const github = markdown.getByRole("link", { name: "#540" })
-  await expect(github).toHaveAttribute("href", "https://github.com/anomalyco/opencode/pull/540")
+  await expect(github).toHaveAttribute("href", "https://github.com/hernsa/ocnano/pull/540")
   await expect(github).toHaveText("#540")
   const mark = github.locator(".markdown-link-favicon[data-github]")
   expect(await mark.evaluate((icon) => getComputedStyle(icon, "::before").width)).toBe("14px")
@@ -350,7 +350,7 @@ story("keeps favicon space stable across loading and failure without fetching pr
         "[docs](https://developer.mozilla.org/docs)",
         "[missing](https://broken.example.org/docs)",
         "[private](http://localhost:8080/docs)",
-        "[GitHub](https://github.com/anomalyco/opencode)",
+        "[GitHub](https://github.com/hernsa/ocnano)",
       ].join(" · "),
       cached: true,
     })
@@ -408,7 +408,7 @@ story("keeps link icons on the same line as the start of their label", async ({ 
     await mountMarkdown({
       text: [
         "Read the [MDN reference](https://developer.mozilla.org/docs) and",
-        "[#540](https://github.com/anomalyco/opencode/pull/540) then",
+        "[#540](https://github.com/hernsa/ocnano/pull/540) then",
         "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/white-space/long-path",
       ].join(" "),
       cached: true,
@@ -1197,3 +1197,4 @@ story("keeps the browser copy for selections that leave the Markdown", async ({ 
   expect(copied.html).toBe("")
   expect(copied.text).toBe("")
 })
+

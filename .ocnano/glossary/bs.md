@@ -2,7 +2,7 @@
 
 ## Sources
 
-- PR #12283: https://github.com/anomalyco/opencode/pull/12283
+- PR #12283: https://github.com/hernsa/ocnano/pull/12283
 
 ## Do Not Translate (Locale Additions)
 
@@ -31,3 +31,4 @@ These are PR-backed locale naming preferences and may evolve.
 
 - Avoid changing repo locale references from `bs` to another slug in code snippets or config examples
 - Avoid translating product and protocol names that are fixed identifiers
+

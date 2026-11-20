@@ -157,7 +157,7 @@ const textHeaders = {
 }
 
 async function installScript() {
-  const response = await fetch("https://raw.githubusercontent.com/anomalyco/opencode/dev/install")
+  const response = await fetch("https://raw.githubusercontent.com/hernsa/ocnano/dev/install")
   const headers = new Headers(response.headers)
   headers.set("Cache-Control", "no-store")
   return new Response(response.body, { status: response.status, statusText: response.statusText, headers })
@@ -187,3 +187,4 @@ function prefersMarkdown(accept: string | null) {
     0
   return quality("text/markdown") > quality("text/html")
 }
+

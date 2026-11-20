@@ -37,7 +37,7 @@ export function DocsSamples(props: {
           <p>
             Body · Run <code>ocnano</code> in a project to open the terminal interface. See{" "}
             <a href="#config">Config</a> for every option, or read the{" "}
-            <a href="https://github.com/anomalyco/opencode" target="_blank">
+            <a href="https://github.com/hernsa/ocnano" target="_blank">
               source on GitHub
             </a>
             .
@@ -639,7 +639,7 @@ export function DocsSamples(props: {
         </props.Sample>
         <props.Sample variant="editLink" label="last updated">
           <p data-component="edit-link">
-            <a href="https://github.com/anomalyco/opencode" target="_blank">
+            <a href="https://github.com/hernsa/ocnano" target="_blank">
               Edit this page on GitHub
             </a>{" "}
             <span>Last updated 2 Nov 2026</span>
@@ -752,3 +752,4 @@ const countLines = [
 const notifyPlugin = `export const Notify = async () => ({
   "session.idle": async () => console.log("Done"),
 })`
+

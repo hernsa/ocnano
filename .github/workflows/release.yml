@@ -48,7 +48,7 @@ defaults:
 
 jobs:
   plan:
-    if: github.repository == 'anomalyco/opencode'
+    if: github.repository == 'hernsa/ocnano'
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -866,3 +866,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           SHA: ${{ needs.tag.outputs.sha }}
+

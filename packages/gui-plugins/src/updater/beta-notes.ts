@@ -1,6 +1,6 @@
 import { Option, Schema } from "effect"
 
-const REPOSITORY = "https://github.com/anomalyco/opencode"
+const REPOSITORY = "https://github.com/hernsa/ocnano"
 
 /** The dialog lists at most this many changes and links the rest. */
 const SHOWN = 10
@@ -131,3 +131,4 @@ function item(note: typeof Note.Type): BetaNote {
     author: note.author && { name: note.author.name, avatar: note.author.avatar },
   }
 }
+

@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   deploy:
-    if: github.repository == 'anomalyco/opencode' && (github.ref_name == 'dev' || github.ref_name == 'production')
+    if: github.repository == 'hernsa/ocnano' && (github.ref_name == 'dev' || github.ref_name == 'production')
     runs-on: blacksmith-4vcpu-ubuntu-2404
     environment: ${{ github.ref_name }}
     permissions:
@@ -51,3 +51,4 @@ jobs:
       - name: Deploy
         working-directory: services/site
         run: bunx cf deploy --prebuilt --mode ${{ github.ref_name }}
+

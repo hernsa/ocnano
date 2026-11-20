@@ -22,8 +22,8 @@ manifests() {
   {
     header "$id" defaultLocale
     printf '%s\n' "PackageLocale: en-US" "Publisher: OC Nano" "PublisherUrl: https://anoma.ly/" \
-      "PublisherSupportUrl: https://github.com/anomalyco/opencode/issues" "PrivacyUrl: https://opencode.ai/legal/privacy-policy" \
-      "PackageName: $name" "PackageUrl: https://opencode.ai/" "License: MIT" "LicenseUrl: https://github.com/anomalyco/opencode/blob/HEAD/LICENSE" \
+      "PublisherSupportUrl: https://github.com/hernsa/ocnano/issues" "PrivacyUrl: https://opencode.ai/legal/privacy-policy" \
+      "PackageName: $name" "PackageUrl: https://opencode.ai/" "License: MIT" "LicenseUrl: https://github.com/hernsa/ocnano/blob/HEAD/LICENSE" \
       "ShortDescription: $description" "Moniker: $moniker" "Tags:" "- ai" "- coding-agent" "- developer-tools" \
       "Documentations:" "- DocumentLabel: Docs" "  DocumentUrl: https://opencode.ai/docs"
     footer defaultLocale
@@ -43,3 +43,4 @@ manifests Anomaly.OC Nano.Desktop "OC Nano" "The open source AI coding agent as 
   "- Architecture: x64" "  InstallerUrl: $base/ocnano-desktop-win-x64.exe" "  InstallerSha256: $(sum "$desktop/ocnano-desktop-win-x64.exe")" \
   "- Architecture: arm64" "  InstallerUrl: $base/ocnano-desktop-win-arm64.exe" "  InstallerSha256: $(sum "$desktop/ocnano-desktop-win-arm64.exe")"
 tail -n +1 "$out"/*/*
+

@@ -676,7 +676,7 @@ zod
 ```text
 24601/ocnano-zellij-namer
 angristan/ocnano-wakatime
-anomalyco/opencode
+hernsa/ocnano
 apps/ocnano-agent
 athal7/ocnano-devcontainers
 awesome-ocnano/awesome-ocnano
@@ -916,3 +916,4 @@ ocnano/gpt-5.2-codex
 ocnano/kimi-k2
 openrouter/google/gemini-2.5-flash
 ```
+

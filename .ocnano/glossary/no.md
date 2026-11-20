@@ -2,8 +2,8 @@
 
 ## Sources
 
-- PR #10018: https://github.com/anomalyco/opencode/pull/10018
-- PR #12935: https://github.com/anomalyco/opencode/pull/12935
+- PR #10018: https://github.com/hernsa/ocnano/pull/10018
+- PR #12935: https://github.com/hernsa/ocnano/pull/12935
 
 ## Do Not Translate (Locale Additions)
 
@@ -36,3 +36,4 @@ These are PR-backed corrections and may evolve.
 - Avoid `Spare` for save actions in persistence contexts
 - Avoid `funksjonshemmet` for disabled feature states
 - Avoid `API Taster`, `Koste`, and `Utsikt` in the corrected contexts above
+

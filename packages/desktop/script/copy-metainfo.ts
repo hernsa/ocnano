@@ -34,13 +34,13 @@ const xml = `<?xml version="1.0" encoding="UTF-8"?>
 
   <content_rating type="oars-1.1" />
 
-  <url type="bugtracker">https://github.com/anomalyco/opencode/issues</url>
+  <url type="bugtracker">https://github.com/hernsa/ocnano/issues</url>
   <url type="homepage">https://opencode.ai</url>
-  <url type="vcs-browser">https://github.com/anomalyco/opencode</url>
+  <url type="vcs-browser">https://github.com/hernsa/ocnano</url>
 
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/anomalyco/opencode/b75d4d1c5ec449585d515c756fc81f080a157a9a/packages/web/src/assets/lander/screenshot.png</image>
+      <image>https://raw.githubusercontent.com/hernsa/ocnano/b75d4d1c5ec449585d515c756fc81f080a157a9a/packages/web/src/assets/lander/screenshot.png</image>
     </screenshot>
   </screenshots>
 </component>
@@ -49,3 +49,4 @@ const xml = `<?xml version="1.0" encoding="UTF-8"?>
 await Bun.write(`resources/${appId}.metainfo.xml`, xml)
 
 console.log(`Generated metainfo for ${channel} at resources/${appId}.metainfo.xml`)
+

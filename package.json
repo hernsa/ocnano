@@ -134,7 +134,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/anomalyco/opencode"
+    "url": "https://github.com/hernsa/ocnano"
   },
   "license": "MIT",
   "prettier": {
@@ -181,3 +181,4 @@
     "@modelcontextprotocol/client@2.4.0": "patches/@modelcontextprotocol%2Fclient@2.4.0.patch"
   }
 }
+

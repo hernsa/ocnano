@@ -2,7 +2,7 @@
 
 import { parseArgs } from "util"
 
-const defaultRepo = "anomalyco/opencode"
+const defaultRepo = "hernsa/ocnano"
 const defaultAgeMonths = 1
 const defaultThreshold = 2
 const defaultSleepMs = 20_000
@@ -391,3 +391,4 @@ void main().catch((error) => {
   console.error("Error:", error)
   process.exit(1)
 })
+

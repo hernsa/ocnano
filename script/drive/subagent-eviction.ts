@@ -8,7 +8,7 @@ const evict = process.env.DEMO_EVICT !== "false"
 
 // Run with OCNANO_DRIVE_DB=proof.sqlite. Only model output and fixture_hold are
 // simulated. The debug endpoint closes the real graph without waiting an hour.
-// Dynamic tools avoid the static adapter issue: anomalyco/opencode-drive#116.
+// Dynamic tools avoid the static adapter issue: hernsa/ocnano-drive#116.
 export default OcNanoDriver.use(
   {
     ocnano: { dev: process.env.OCNANO_DEV ?? process.cwd() },
@@ -151,3 +151,4 @@ export default OcNanoDriver.use(
         return yield* Effect.fail(new Error("Unexpected completion delivery"))
     }),
 )
+

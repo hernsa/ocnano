@@ -2,7 +2,7 @@
 
 ## Sources
 
-- PR #15835: https://github.com/anomalyco/opencode/pull/15835
+- PR #15835: https://github.com/hernsa/ocnano/pull/15835
 
 ## Do Not Translate (Locale Additions)
 
@@ -36,3 +36,4 @@ These are PR-backed wording preferences and may evolve.
 - Avoid `Önce gizlilik için tasarlandı`; use the more natural reviewed wording instead
 - Avoid `Sekme` for the translated key label in prose when referring to `<TAB>`
 - Avoid changing `ocnano` to `OC Nano` inside commands, URLs, package names, or code literals
+

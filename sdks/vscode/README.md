@@ -15,7 +15,7 @@ This extension requires the [ocnano CLI](https://opencode.ai) to be installed on
 
 ## Support
 
-This is an early release. If you encounter issues or have feedback, please create an issue at https://github.com/anomalyco/opencode/issues.
+This is an early release. If you encounter issues or have feedback, please create an issue at https://github.com/hernsa/ocnano/issues.
 
 ## Development
 
@@ -32,3 +32,4 @@ To test your changes:
 1. In the debug VS Code window, press `Cmd+Shift+P`
 2. Search for `Developer: Reload Window`
 3. Reload to see your changes without restarting the debug session
+

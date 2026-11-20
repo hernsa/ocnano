@@ -9,7 +9,7 @@ import { dirname, join } from "path"
 import { fileURLToPath } from "url"
 
 const app = join(dirname(fileURLToPath(import.meta.url)), "..")
-const repo = "https://github.com/anomalyco/opencode"
+const repo = "https://github.com/hernsa/ocnano"
 
 // Every file that has held a document's text, newest first. The text moved from the route files to
 // src/lib/legal, then to this service, and two copies existed for a day, so a version is the text of
@@ -215,3 +215,4 @@ function clean(run: string) {
 function effective(text: string) {
   return text.match(/Effective(?: date)?:?\s*([A-Z][a-z]{2,8}\.? \d{1,2}, \d{4})/)?.[1] ?? null
 }
+
