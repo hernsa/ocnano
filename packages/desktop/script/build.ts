@@ -41,6 +41,6 @@ if (!built) await downloadCliToResources(channel === "beta" ? "beta" : undefined
 // that never arrives, so the build stops here instead of shipping a blank window.
 await verifyBundledCli({ desktop: channel, versionFile: path.join(dir, "resources", "ocnano-cli.version") })
 
-await $`bunx electron-vite build`
+await $`bun x electron-vite build`
 
 await verifyBundles(path.join(dir, "out"))

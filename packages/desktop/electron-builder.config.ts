@@ -100,7 +100,7 @@ const getBase = (appId: string): Configuration => {
       "!resources/ocnano-cli*",
       // The rename left the upstream CLI binary and its version file in the resources. They are
       // not part of an OC Nano build, and shipping them would put an upstream artifact in the app.
-      "!resources/opencode-cli*",
+      "!resources/ocnano-cli*",
       // Keep only the target platform's node-pty prebuild when cross-packaging with --cpu=*.
       ...CLI_BINARIES.filter((item) => item.os !== target.os || item.cpu !== target.cpu).map(
         (item) => `!**/node_modules/@lydell/node-pty-${item.os}-${item.cpu}{,/**/*}`,

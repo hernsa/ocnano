@@ -244,7 +244,7 @@ export const layer = (options?: Options) =>
         // distinct logical servers that may hold different accounts, so they must not share a credential row.
         const suffix =
           "mcp_" +
-          createHash("sha1")
+          createHash("sha256")
             .update(name + "\u0000" + remote.url)
             .digest("hex")
             .slice(0, 16)

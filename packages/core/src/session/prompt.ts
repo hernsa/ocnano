@@ -235,7 +235,7 @@ const readFileAttachment = Effect.fn("SessionPrompt.readFileAttachment")(functio
   return { bytes, source: { type: "uri" as const, uri }, start, end, name: path.basename(target), mime: undefined }
 })
 
-const MAX_ATTACHMENT_BYTES = 20 * 1024 * 1024
+const MAX_ATTACHMENT_BYTES = 8 * 1024 * 1024
 
 // A data URL is the whole file; errors and logs must name the attachment, not echo its bytes.
 function attachmentLabel(input: PromptInput.FileAttachment) {
