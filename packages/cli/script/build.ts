@@ -81,7 +81,7 @@ if (!skipInstall) {
   ).version as string
 
   // Bun 1.4.4 skips native packages for the other libc by default, but the musl targets need them.
-  await $`bun install --os="*" --cpu="*" --libc="*" @opentui/core@${pkg.dependencies["@opentui/core"]} @ocnano/pty@${ptyVersion}`
+  await $`bun install --os="*" --cpu="*" --libc="*" @opentui/core@${pkg.dependencies["@opentui/core"]} @opencode/pty@${ptyVersion}`
 }
 const appArchive = path.join(dir, ".cache", "bun-app-archive.bin")
 await Bun.write(appArchive, await buildAppArchive(Script.channel, Script.version, { skipBuild: skipWebUi }))

@@ -1,5 +1,5 @@
 {
-  "name": "@ocnano/pty",
+  "name": "@opencode/pty",
   "version": "0.5.0",
   "description": "Persistent PTY service for OC Nano",
   "type": "module",

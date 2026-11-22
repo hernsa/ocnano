@@ -37,7 +37,7 @@
     "effect": "catalog:"
   },
   "devDependencies": {
-    "@ocnano/pty": "workspace:*",
+    "@opencode/pty": "workspace:*",
     "@ocnano/client": "workspace:*",
     "@ocnano/plugin": "workspace:*",
     "@tsconfig/bun": "catalog:",

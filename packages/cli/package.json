@@ -32,11 +32,11 @@
     "@effect/platform-node": "catalog:",
     "@ocnano/client": "workspace:*",
     "@ocnano/plugin": "workspace:*",
-    "@ocnano/pty": "workspace:*",
     "@ocnano/schema": "workspace:*",
     "@ocnano/server": "workspace:*",
     "@ocnano/tui": "workspace:*",
     "@ocnano/util": "workspace:*",
+    "@opencode/pty": "workspace:*",
     "@opentui/core": "catalog:",
     "@opentui/solid": "catalog:",
     "@opentunnel/client": "0.6.1",
@@ -88,4 +88,3 @@
     "directory": "packages/cli"
   }
 }
-
