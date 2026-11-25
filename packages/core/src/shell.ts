@@ -34,6 +34,35 @@ export const RETENTION = Duration.days(7)
 export const DIRECTORY = "shell"
 const SPAN_COMMAND_LIMIT = 200
 
+// Environment variables safe to inherit into a spawned shell command. The full
+// process.env can contain secrets (API keys, tokens, passwords) that should not
+// leak into arbitrary commands the model runs. Only the allowlisted variables
+// plus anything prefixed with OCNANO_ are inherited.
+const SHELL_ENV_ALLOWLIST = [
+  "PATH",
+  "HOME",
+  "USER",
+  "USERNAME",
+  "SHELL",
+  "TERM",
+  "PWD",
+  "TEMP",
+  "TMPDIR",
+  "TMP",
+]
+
+function filteredEnv(source: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
+  const out: Record<string, string> = {}
+  for (const key of SHELL_ENV_ALLOWLIST) {
+    const value = source[key]
+    if (value !== undefined) out[key] = value
+  }
+  for (const [key, value] of Object.entries(source)) {
+    if (key.startsWith("OCNANO_") && value !== undefined) out[key] = value
+  }
+  return out as NodeJS.ProcessEnv
+}
+
 type Info = Shell.Info
 type CreateInput = Shell.CreateInput & {
   shell?: string
@@ -303,7 +332,8 @@ const layer = () =>
         const baseEnv =
           location.workspaceID !== undefined
             ? undefined
-            : ((Schema.is(SessionSchema.ID)(sessionID) ? yield* environments.get(sessionID) : undefined) ?? process.env)
+            : ((Schema.is(SessionSchema.ID)(sessionID) ? yield* environments.get(sessionID) : undefined) ??
+              filteredEnv(process.env))
         const invocation: ShellCreateBefore = {
           command: input.command,
           cwd: input.cwd ?? location.directory,

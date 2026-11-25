@@ -41,7 +41,7 @@ import { HttpRouter } from "effect/http"
 import { HttpApiBuilder } from "effect/http-api"
 import { Context, Effect, Layer, Option } from "effect"
 import { Api } from "./api"
-import { ServerAuth } from "./auth"
+import { ServerAuth, generateDefaultPassword } from "./auth"
 import { CorsConfig } from "./cors"
 import { handlers } from "./handlers"
 import { authorizationLayer } from "./middleware/authorization"
@@ -92,10 +92,17 @@ export function createRoutes(
   serviceURLs: () => ReadonlyArray<string> = () => [],
   overrides: LayerNode.Replacements = [],
 ) {
+  const password =
+    options.password ??
+    (() => {
+      const generated = generateDefaultPassword()
+      console.log(
+        `[ocnano] No OCNANO_SERVER_PASSWORD set. Generated default server password: ${generated}`,
+      )
+      return generated
+    })()
   return makeRoutes(
-    options.password
-      ? ServerAuth.Config.configLayer({ password: Option.some(options.password) })
-      : ServerAuth.Config.layer,
+    ServerAuth.Config.configLayer({ password: Option.some(password) }),
     options,
     serviceURLs,
     overrides,
@@ -111,7 +118,22 @@ export function createEmbeddedRoutes(
   overrides: LayerNode.Replacements = [],
   instances?: InstanceNode,
 ) {
-  return makeRoutes(ServerAuth.Config.configLayer({ password: Option.none() }), options, () => [], overrides, instances)
+  const password =
+    options.password ??
+    (() => {
+      const generated = generateDefaultPassword()
+      console.log(
+        `[ocnano] No OCNANO_SERVER_PASSWORD set for embedded server. Generated default password: ${generated}`,
+      )
+      return generated
+    })()
+  return makeRoutes(
+    ServerAuth.Config.configLayer({ password: Option.some(password) }),
+    options,
+    () => [],
+    overrides,
+    instances,
+  )
 }
 
 function makeRoutes<AuthError, AuthServices>(

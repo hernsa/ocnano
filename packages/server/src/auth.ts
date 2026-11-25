@@ -26,7 +26,13 @@ export class Config extends Context.Service<Config, Info>()("@ocnano/ServerAuthC
 }
 
 export function required(config: Info) {
+  // Authentication is required by default. A configured password always enables auth.
   return Option.isSome(config.password) && config.password.value !== ""
+}
+
+export function generateDefaultPassword(): string {
+  const { randomBytes } = require("node:crypto")
+  return randomBytes(24).toString("base64url")
 }
 
 // Session tokens issued by pairing links are accepted anywhere the password is.

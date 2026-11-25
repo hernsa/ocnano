@@ -11,6 +11,58 @@ import { makeGlobalNode } from "@ocnano/util/effect/app-node"
 import { EffectFlock } from "@ocnano/util/effect-flock"
 import { CredentialTable } from "./credential/sql.js"
 import { ErrorSummary } from "./util/error-summary.js"
+import { FSUtil } from "@ocnano/util/fs-util"
+import path from "node:path"
+import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto"
+
+const ENCRYPTION_PREFIX = "ocnano-enc-v1:"
+
+function encryptionKeyPath() {
+  return path.join(process.cwd(), ".ocnano-credential.key")
+}
+
+let keyCache: Buffer | undefined
+
+function loadOrCreateKey(fs: FSUtil.Interface): Effect.Effect<Buffer> {
+  return Effect.gen(function* () {
+    if (keyCache) return keyCache
+    const keyPath = encryptionKeyPath()
+    let key: Buffer
+    try {
+      key = yield* fs
+        .readFile(keyPath)
+        .pipe(Effect.map((buf) => Buffer.from(buf)))
+    } catch {
+      key = randomBytes(32)
+      yield* fs
+        .writeFile(keyPath, key, { mode: 0o600 })
+        .pipe(Effect.orDie)
+    }
+    keyCache = key
+    return key
+  }).pipe(Effect.orDie)
+}
+
+function encryptValue(value: unknown, key: Buffer): string {
+  const iv = randomBytes(12)
+  const cipher = createCipheriv("aes-256-gcm", key, iv)
+  const plaintext = JSON.stringify(value)
+  const encrypted = Buffer.concat([cipher.update(plaintext, "utf8"), cipher.final()])
+  const tag = cipher.getAuthTag()
+  return ENCRYPTION_PREFIX + Buffer.concat([iv, tag, encrypted]).toString("base64")
+}
+
+function decryptValue(stored: string, key: Buffer): unknown {
+  if (!stored.startsWith(ENCRYPTION_PREFIX)) return Schema.decodeUnknownSync(CredentialLegacy.Value)(stored)
+  const raw = Buffer.from(stored.slice(ENCRYPTION_PREFIX.length), "base64")
+  const iv = raw.subarray(0, 12)
+  const tag = raw.subarray(12, 28)
+  const encrypted = raw.subarray(28)
+  const decipher = createDecipheriv("aes-256-gcm", key, iv)
+  decipher.setAuthTag(tag)
+  const plaintext = Buffer.concat([decipher.update(encrypted), decipher.final()]).toString("utf8")
+  return Schema.decodeUnknownSync(CredentialLegacy.Value)(plaintext)
+}
 
 export const ID = Credential.ID
 export type ID = Credential.ID
@@ -89,16 +141,18 @@ const layer = Layer.effect(
     const bus = yield* Bus.Service
     const flock = yield* EffectFlock.Service
     const scope = yield* Effect.scope
+    const fs = yield* FSUtil.Service
     const pending = new Map<ID, Fiber.Fiber<OAuth | undefined, unknown>>()
-    // Rows written before v2.1 may carry the old key credential shape.
-    const decode = Schema.decodeUnknownSync(CredentialLegacy.Value)
+    // Rows written before v2.1 may carry the old key credential shape; decryptValue
+    // falls back to the legacy schema for unencrypted rows.
+    const key = yield* loadOrCreateKey(fs)
     const stored = (row: typeof CredentialTable.$inferSelect) => {
       if (!row.integration_id) return
       return new Info({
         id: row.id,
         integrationID: row.integration_id,
         label: row.label,
-        value: decode(row.value),
+        value: decryptValue(row.value as unknown as string, key) as Credential.Value,
       })
     }
     const storedRows = (rows: ReadonlyArray<typeof CredentialTable.$inferSelect>) =>
@@ -210,7 +264,7 @@ const layer = Layer.effect(
                   id: credential.id,
                   integration_id: credential.integrationID,
                   label: credential.label,
-                  value: credential.value,
+                  value: encryptValue(credential.value, key) as unknown as Credential.Value,
                   active: activate,
                 })
                 .run()
@@ -275,7 +329,12 @@ const layer = Layer.effect(
         if (updates.label === credential.label && updates.value === undefined) return
         const updated = yield* db
           .update(CredentialTable)
-          .set({ label: updates.label, value: updates.value })
+          .set({
+            label: updates.label,
+            ...(updates.value !== undefined
+              ? { value: encryptValue(updates.value, key) as unknown as Credential.Value }
+              : {}),
+          })
           .where(eq(CredentialTable.id, id))
           .returning({ id: CredentialTable.id })
           .get()
@@ -347,4 +406,4 @@ const layer = Layer.effect(
   }),
 )
 
-export const node = makeGlobalNode({ service: Service, layer, deps: [Database.node, Bus.node, EffectFlock.node] })
+export const node = makeGlobalNode({ service: Service, layer, deps: [Database.node, Bus.node, EffectFlock.node, FSUtil.node] })

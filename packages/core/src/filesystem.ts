@@ -99,8 +99,8 @@ export interface Interface {
   /** Fails with `NotFoundError` when the path is missing or is not a directory. */
   readonly list: (input?: ListInput) => Effect.Effect<Entry[], NotFoundError>
   readonly find: (input: FindInput) => Effect.Effect<Entry[]>
-  /** Writes a file at an absolute path or one relative to the location; not confined to it. */
-  readonly write: (input: WriteInput) => Effect.Effect<Write>
+  /** Writes a file at an absolute path or one relative to the location; confined to it. */
+  readonly write: (input: WriteInput) => Effect.Effect<Write, NotFoundError>
 }
 
 export class Service extends Context.Service<Service, Interface>()("@ocnano/FileSystem") {}
@@ -198,10 +198,13 @@ const baseLayer = Layer.effect(
           ),
         )
       }),
-      // Unlike read, write reaches outside the location so clients can stage files in the
-      // server tmp directory, which the model is already told to prefer and permitted to access.
+      // Write is confined to the location directory so ../ traversal cannot write
+      // arbitrary host paths. Clients that need to stage files should use a dedicated
+      // temporary location instead of escaping the workspace.
       write: Effect.fn("FileSystem.write")(function* (input) {
         const target = path.resolve(location.directory, input.path)
+        if (!FSUtil.contains(location.directory, target))
+          return yield* Effect.fail(new NotFoundError({ path: RelativePath.make(input.path) }))
         yield* fs.writeWithDirs(target, input.data).pipe(Effect.orDie)
         return Write.make({ path: AbsolutePath.make(target) })
       }),

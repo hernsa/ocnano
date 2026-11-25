@@ -80,9 +80,20 @@ export const authorizationLayer = Layer.effect(
       Effect.gen(function* () {
         const request = yield* HttpServerRequest.HttpServerRequest
         const route = yield* HttpRouter.RouteContext
-        // Ticketed PTY and client MCP connects (browsers cannot set headers on WebSocket upgrades) and pairing links
-        // skip credential checks here; their handlers consume and validate the ticket or code. Use the
-        // route selected by Effect so authorization and dispatch cannot disagree about the request path.
+        // Always require base authentication first, even for ticketed routes.
+        // Tickets authorize a specific action (PTY connect, MCP client, pairing)
+        // but do not by themselves authenticate the caller.
+        if (!(yield* authorizedRequest(request, config))) {
+          if (challengeRequest(request))
+            yield* HttpEffect.appendPreResponseHandler((_request, response) =>
+              Effect.succeed(HttpServerResponse.setHeader(response, "www-authenticate", WWW_AUTHENTICATE)),
+            )
+          return yield* new UnauthorizedError({ message: UNAUTHORIZED_MESSAGE })
+        }
+        // Ticketed PTY and client MCP connects (browsers cannot set headers on WebSocket upgrades)
+        // and pairing links skip the additional credential check here; their handlers consume and
+        // validate the ticket or code. Use the route selected by Effect so authorization and dispatch
+        // cannot disagree about the request path.
         const url = new URL(request.url, "http://localhost")
         if (
           ((route.route.path === PTY_CONNECT_PATH ||
@@ -92,7 +103,6 @@ export const authorizationLayer = Layer.effect(
           route.route.path === PAIRING_CONNECT_PATH
         )
           return yield* effect
-        if (yield* authorizedRequest(request, config)) return yield* effect
         if (challengeRequest(request))
           yield* HttpEffect.appendPreResponseHandler((_request, response) =>
             Effect.succeed(HttpServerResponse.setHeader(response, "www-authenticate", WWW_AUTHENTICATE)),
