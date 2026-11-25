@@ -183,7 +183,7 @@ export function Anagrams() {
   const [playing, setPlaying] = createSignal(true)
   onMount(() => setMotion(!prefersReducedMotion()))
   const [time, setTime] = useClock(() => visible() && playing() && motion())
-  // All 10,080 arrangements, computed once in the browser on first need.
+  // All 24 arrangements, computed once in the browser on first need.
   const all = createMemo(() => {
     const list: string[] = []
     let current: string[] | undefined = [..."cdeenoop"]

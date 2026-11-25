@@ -32,7 +32,7 @@ type Confetti = {
 }
 
 /**
- * The font page's hero: type anything and it is set in the six letters. The text is a real
+ * The font page's hero: type anything and it is set in the four letters. The text is a real
  * (hidden) textarea; the letters are drawn beside it. Exports the typing as a GIF or the current
  * map as an installable font. A perfect anagram of "ocnano" sets off confetti.
  */

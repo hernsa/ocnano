@@ -81,7 +81,7 @@ export const pageMarkdown: Record<string, PageMarkdown> = {
   "/brand": { title: "Brand", description: "Logos, wordmarks, colors and usage rules", markdown: brandMarkdown },
   "/font": {
     title: "Font",
-    description: "The OC Nano font, how its six letters are built, and how to download it",
+    description: "The OC Nano font, how its four letters are built, and how to download it",
     markdown: fontMarkdown,
     englishOnly: true,
   },

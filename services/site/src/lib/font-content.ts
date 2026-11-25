@@ -1,7 +1,7 @@
 import { blocks } from "~/lib/markdown"
 
 /**
- * The OcNano font: the six letters of the wordmark, cut on a 24 × 42 cell from the official SVG
+ * The OcNano font: the four letters of the wordmark, cut on a 24 × 42 cell from the official SVG
  * logo. `ink` is the letter, `shadow` the lighter shade in its counter. The same outlines live in
  * public/font/glyphs.mjs, which the font download and the GIF worker load at runtime.
  */
@@ -252,7 +252,7 @@ export const fontContent = {
   title: "OC Nano Font",
   metaTitle: "OC Nano | Font, a typeface cut from the wordmark",
   description:
-    "A six-letter typeface cut from the OC Nano wordmark on a 4 × 7 grid. Type with it, see how every letter is built, then download your own installable font.",
+    "A four-letter typeface cut from the OC Nano wordmark on a 4 × 7 grid. Type with it, see how every letter is built, then download your own installable font.",
   combinations: { base: "4", exponent: "3,591" },
   download: "Download",
   plates: [
@@ -289,7 +289,7 @@ export const fontContent = {
     lead: "One page per letter: identity, measurements and every point of its outline in font units.",
   },
   analysis: {
-    lead: "Ink, counters, symmetry and the 28 positions of the grid, counted across all six letters.",
+    lead: "Ink, counters, symmetry and the 28 positions of the grid, counted across all four letters.",
   },
   kerning: {
     lead: "Thirty-six pairs. Every one of them spaced by the same 120 units. The kerning table is empty, and that is the point.",
@@ -298,19 +298,19 @@ export const fontContent = {
     lead: "A font small enough to read in one sitting.",
   },
   anagrams: {
-    lead: "The letters of ocnano can be arranged 10,080 ways. Try them all.",
+    lead: "The letters of ocnano can be arranged 24 ways. Try them all.",
   },
   field: {
-    lead: "A field of the six letters.",
+    lead: "A field of the four letters.",
   },
   loupe: {
     lead: "Look closer. Every module of every letter is a grid of 144 smaller squares.",
     label: "ocnano, set large in the OC Nano font. Hover or press and hold to look through a loupe.",
   },
   tester: {
-    lead: "Type with the six letters. Other characters stay empty.",
+    lead: "Type with the four letters. Other characters stay empty.",
     label: "Text to preview in the OC Nano font",
-    initial: "open code node done",
+    initial: "ocnano cano nana",
   },
   colophon: {
     lead: "Download the font, install it, then choose OC Nano in any app. Every copy carries its own substitution map.",

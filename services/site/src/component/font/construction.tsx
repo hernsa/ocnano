@@ -322,7 +322,7 @@ function SmallConstructions() {
   )
 }
 
-/** Plate: the construction phases of all six letters as a Gantt chart, with a running playhead. */
+/** Plate: the construction phases of all four letters as a Gantt chart, with a running playhead. */
 export function Timeline() {
   let chart: HTMLDivElement | undefined
   const seen = useSeen(() => chart)

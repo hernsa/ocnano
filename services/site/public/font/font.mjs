@@ -77,7 +77,7 @@ export function createLogoFont(opentype, mapCharacter = defaultFontMapping) {
     descender: -200,
     weightClass: 400,
     version: 'Version 1.001',
-    description: 'A single-color, six-letter OC Nano logo alphabet. Other characters have fixed substitutions. Original text is preserved.',
+    description: 'A single-color, four-letter OC Nano logo alphabet. Other characters have fixed substitutions. Original text is preserved.',
     manufacturer: 'OpenType',
     designer: 'OC Nano wordmark',
     designerURL: 'https://opencode.ai',

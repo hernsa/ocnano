@@ -211,7 +211,7 @@ export function Analysis() {
         <Figure
           index={6}
           title="Coverage heatmap"
-          note={`How many of the six letters put ink in each of the 28 positions. ${sharedPositions} positions are used by all six.`}
+          note={`How many of the four letters put ink in each of the 28 positions. ${sharedPositions} positions are used by all four.`}
         >
           <div data-slot="heatmap" role="table" aria-label="Ink count per grid position">
             <For each={heatmap}>
@@ -237,7 +237,7 @@ export function Analysis() {
         <Figure
           index={7}
           title="Letter frequency"
-          note={`Across the ${words.length} words the six letters spell. The e carries the language.`}
+          note={`Across the ${words.length} words the four letters spell. The a is the only vowel.`}
         >
           <div data-slot="columns" role="table" aria-label="Letter frequency">
             <For each={letters}>
@@ -418,7 +418,7 @@ export function Performance() {
     { value: number(performance.brotli), unit: "bytes", label: "Brotli" },
     { value: number(performance.gzip), unit: "bytes", label: "Gzip" },
     { value: String(performance.glyphs), unit: "glyphs", label: "Including .notdef, .null and space" },
-    { value: number(performance.codePoints), unit: "code points", label: "Mapped to six letters" },
+    { value: number(performance.codePoints), unit: "code points", label: "Mapped to four letters" },
     { value: "0", unit: "hints", label: "Every edge is on the grid" },
     { value: "0", unit: "curves", label: "Only H and V segments" },
     {

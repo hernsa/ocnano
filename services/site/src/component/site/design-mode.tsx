@@ -283,15 +283,15 @@ export const copyVariants = {
     lines: 2,
     options: [
       "Each visit draws one font out of 6³⁵⁹¹.\nThat number is 2,795 digits long.\nThe universe has about 10⁸⁰ atoms.\nMake every atom a universe. Then do it again.\n34 times gets you 10²⁷²⁰. Not enough.\n35 times gets you 10²⁸⁰⁰. Past it.\nOne of them is yours.",
-      "3,591 characters, six letters, a new mapping every visit.\nThat's 6³⁵⁹¹ fonts, a number 2,795 digits long.\nThe universe holds about 10⁸⁰ atoms.\nNot close. Give every atom its own universe.\nThen every atom in those. 34 levels down, 10²⁷²⁰ is still short.\nAt level 35, 10²⁸⁰⁰, we finally pass it.\nYours is one of them.",
+      "3,591 characters, four letters, a new mapping every visit.\nThat's 6³⁵⁹¹ fonts, a number 2,795 digits long.\nThe universe holds about 10⁸⁰ atoms.\nNot close. Give every atom its own universe.\nThen every atom in those. 34 levels down, 10²⁷²⁰ is still short.\nAt level 35, 10²⁸⁰⁰, we finally pass it.\nYours is one of them.",
     ],
   },
   "font.film.lead": {
     label: "Film lead",
     lines: 1,
     options: [
-      "Ninety seconds on the greatest six letters ever drawn.",
-      "The greatest six letters ever drawn, on film.",
+      "Ninety seconds on the greatest four letters ever drawn.",
+      "The greatest four letters ever drawn, on film.",
     ],
   },
   "brand.agentButton": {

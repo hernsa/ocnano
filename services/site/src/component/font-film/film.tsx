@@ -502,7 +502,7 @@ function LettersScene(props: { c: Ctx }) {
   const gy = Math.round((c.H - 7 * m) / 2)
   const tx = c.tall ? gx + 4 * m + 56 : Math.round(c.W * 0.52)
   // The text block: font size and baseline of each line. The numeral sits at the same place for every
-  // letter, its cap height centred on the x-height box (rows 1–5, which all six letters share); the
+  // letter, its cap height centred on the x-height box (rows 1–5, which all four letters share); the
   // lines below hang from it and grow downward.
   const block = c.tall
     ? { sizes: [150, 24, 22, 20, 20, 20], baselines: [0, 58, 94, 128, 158, 188] }
@@ -1628,7 +1628,7 @@ function TerminalScene(props: { c: Ctx }) {
 /* ───────────────────────── 6^3,591 ───────────────────────── */
 
 const SAMPLE = ["the quick brown fox", "jumps over the lazy dog"]
-// 6^3591: 3,591 characters, each drawn with one of six letters.
+// 6^3591: 3,591 characters, each drawn with one of four letters.
 let digitsCache: string | undefined
 const digits = () => (digitsCache ??= (6n ** 3591n).toString())
 

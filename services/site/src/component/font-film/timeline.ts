@@ -19,7 +19,7 @@ const script = [
     beats: [2.33, 5.15, 7.52, 9.7],
     gap: 1.5,
   },
-  { id: "six", text: "So we did not draw twenty-six letters. We drew six.", length: 3.69, beats: [2.63] },
+  { id: "four", text: "So we did not draw twenty-six letters. We drew four.", length: 3.69, beats: [2.63] },
   { id: "letters", text: "O. P. E. N. C. D.", length: 3.72, beats: [0.75, 1.5, 2.17, 2.71, 3.4] },
   {
     id: "wordmark",
@@ -56,7 +56,7 @@ const script = [
   },
   {
     id: "combinations",
-    text: "Only six letters. Yet every visit maps the other 3,591 characters afresh. A number of combinations 2,795 digits long.",
+    text: "Only four letters. Yet every visit maps the other 3,591 characters afresh. A number of combinations 2,795 digits long.",
     length: 12.01,
     beats: [1.78, 7.38, 10.91],
     gap: 2,

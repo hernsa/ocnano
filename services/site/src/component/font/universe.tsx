@@ -9,7 +9,7 @@ const PER_LEVEL = 80
 const LEVELS = Math.ceil(EXPONENT / PER_LEVEL)
 
 const STORY = [
-  "Every visit maps 3,591 characters to six letters.",
+  "Every visit maps 3,591 characters to four letters.",
   "That makes 6³⁵⁹¹ possible fonts, a number 2,795 digits long.",
   "The observable universe holds about 10⁸⁰ atoms.",
   "Put a whole universe inside every one of those atoms.",

@@ -62,7 +62,7 @@ export function GlyphShape(props: { letter: Letter; mode?: GlyphMode; x?: number
 /**
  * A word set in the font as one SVG. Its CSS sets `--m`, the module size in pixels; the SVG is
  * `--cols` modules wide and seven high, so whole-pixel modules keep every edge crisp. Characters
- * outside the six letters show as an empty cell. Without `label` the word is decorative.
+ * outside the four letters show as an empty cell. Without `label` the word is decorative.
  */
 export function Word(props: {
   text: string

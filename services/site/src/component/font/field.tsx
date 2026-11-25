@@ -9,7 +9,7 @@ type Palette = { bg: string; faint: string; ink: string; blue: string }
 const ACCENT = "ocnano"
 
 /**
- * Plate: a field of the six letters on a canvas. It rests as a quiet grid; the pointer leaves a
+ * Plate: a field of the four letters on a canvas. It rests as a quiet grid; the pointer leaves a
  * trail of small ripples and a click drops a pulse. Tiles a ripple reaches turn over to the next
  * letters, darken, turn blue and finally invert, then settle back. Flat colours on whole pixels.
  */

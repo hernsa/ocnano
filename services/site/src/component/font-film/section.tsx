@@ -49,7 +49,7 @@ export function FilmPlate() {
         </span>
       </header>
       <p data-slot="plate-lead" data-design-copy="font.film.lead">
-        {designCopy("font.film.lead", "A short film on the greatest six letters ever drawn.")}
+        {designCopy("font.film.lead", "A short film on the greatest four letters ever drawn.")}
       </p>
       <figure
         data-slot="film-screen"
