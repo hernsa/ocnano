@@ -1,4 +1,4 @@
-import { chmod, copyFile, mkdtemp, rm } from "node:fs/promises"
+import { chmod, copyFile, mkdtemp, readdir, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { dirname, join } from "node:path"
 import { Option, Schema } from "effect"
@@ -112,9 +112,27 @@ export function packageDirectory(name: string) {
 // The package directory is an npm package: its package.json version is the string the executable
 // prints for --version. Writing it next to the executable spares the desktop a ~400 ms spawn of the
 // 200 MB binary on first launch.
+/**
+ * The executable inside a CLI package. The published packages keep their
+ * upstream scope and ship the upstream executable name, while a locally built
+ * OC Nano CLI ships its own. Take whichever the package actually carries.
+ */
+async function cliExecutable(pkg: string, os: string) {
+  const dir = join(pkg, "bin")
+  const suffix = os === "win32" ? ".exe" : ""
+  const entries = await readdir(dir).catch(() => [] as string[])
+  const candidates = entries.filter((entry) => entry.endsWith(suffix))
+  const name =
+    candidates.find((entry) => entry === `ocnano${suffix}`) ??
+    candidates.find((entry) => entry === `opencode${suffix}`) ??
+    candidates[0]
+  if (!name) throw new Error(`Bundled CLI package has no executable: ${pkg}`)
+  return join(dir, name)
+}
+
 async function copyCliToResources(pkg: string, dest: string) {
   const cli = getCurrentCli()
-  await copyFile(join(pkg, "bin", cli.os === "win32" ? "ocnano.exe" : "ocnano"), dest)
+  await copyFile(await cliExecutable(pkg, cli.os), dest)
   await prepareCli(dest)
 
   const manifest = Option.getOrUndefined(
