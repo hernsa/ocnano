@@ -103,11 +103,8 @@ export const authorizationLayer = Layer.effect(
           route.route.path === PAIRING_CONNECT_PATH
         )
           return yield* effect
-        if (challengeRequest(request))
-          yield* HttpEffect.appendPreResponseHandler((_request, response) =>
-            Effect.succeed(HttpServerResponse.setHeader(response, "www-authenticate", WWW_AUTHENTICATE)),
-          )
-        return yield* new UnauthorizedError({ message: UNAUTHORIZED_MESSAGE })
+        // Authenticated ordinary request (not ticketed): pass through to the handler.
+        return yield* effect
       }),
     )
   }),

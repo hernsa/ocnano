@@ -221,7 +221,7 @@ export function install() {
     },
     sdk() {
       say(["› ", dim], [manifest.sdk.install, strong])
-      say(['import { OC Nano } from "@ocnano/sdk"'])
+      say(['import { OcNano } from "@ocnano/sdk"'])
       say([`Docs: ${manifest.sdk.docs}`, dim])
       return manifest.sdk.install
     },

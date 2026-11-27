@@ -221,16 +221,17 @@ const readFileAttachment = Effect.fn("SessionPrompt.readFileAttachment")(functio
       uri,
       message: `Attachment exceeds the ${MAX_ATTACHMENT_BYTES} byte limit: ${uri}`,
     })
-  // Read the file once, then use a content hash as the cache stamp so that
-  // same-size edits preserving mtime are not served stale bytes.
-  const bytes = yield* fs
-    .readFile(target)
-    .pipe(Effect.mapError(() => new AttachmentError({ uri, message: `Unable to read attachment: ${uri}` })))
-  const stamp = `${info.size}:${contentStamp(bytes)}`
+  // Use size + mtime as the cache stamp: cheap to compute (no content hash),
+  // and changes whenever the file is rewritten. Check the native cache before
+  // reading the file so cache hits avoid a disk read entirely.
+  const stamp = `${info.size}:${info.mtimeMs ?? info.mtime ?? 0}`
   const id = attachmentId(target, undefined, undefined, stamp)
   const cached = nativeCall(() => OcNano.getAttachment(id))
   if (cached)
     return { bytes: cached, source: { type: "uri" as const, uri }, start, end, name: path.basename(target), mime: undefined }
+  const bytes = yield* fs
+    .readFile(target)
+    .pipe(Effect.mapError(() => new AttachmentError({ uri, message: `Unable to read attachment: ${uri}` })))
   keepAttachment(conversation, id, bytes)
   return { bytes, source: { type: "uri" as const, uri }, start, end, name: path.basename(target), mime: undefined }
 })

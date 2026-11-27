@@ -22,7 +22,7 @@ test("generated Effect API names canonical and composed outputs", async () => {
   const source = await Bun.file(new URL("../src/effect/api/api.ts", import.meta.url)).text()
 
   expect(source).toContain("export type SessionGetOutput = Session.Info")
-  expect(source).toContain("export type EventSubscribeOutput = OC NanoEvent")
+  expect(source).toContain("export type EventSubscribeOutput = OcNanoEvent")
   expect(source).not.toContain("HttpApiClient.ForApi")
 })
 

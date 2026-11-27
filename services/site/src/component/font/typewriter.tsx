@@ -65,7 +65,7 @@ export function Typewriter() {
 
     const isPerfectAnagram = (text: string) => {
       const letters = text.toLowerCase().replace(/\s/gu, "")
-      return letters !== "ocnano" && letters.length === 8 && [...letters].sort().join("") === "cdeenoop"
+      return letters !== "ocnano" && letters.length === 6 && [...letters].sort().join("") === "acnnoo"
     }
 
     const keepCaretVisible = () => {

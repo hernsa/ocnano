@@ -298,7 +298,7 @@ export const fontContent = {
     lead: "A font small enough to read in one sitting.",
   },
   anagrams: {
-    lead: "The letters of ocnano can be arranged 24 ways. Try them all.",
+    lead: "The letters of ocnano can be arranged 180 ways. Try them all.",
   },
   field: {
     lead: "A field of the four letters.",

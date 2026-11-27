@@ -186,7 +186,7 @@ export function Anagrams() {
   // All 24 arrangements, computed once in the browser on first need.
   const all = createMemo(() => {
     const list: string[] = []
-    let current: string[] | undefined = [..."cdeenoop"]
+    let current: string[] | undefined = [..."ocnano"]
     while (current) {
       list.push(current.join(""))
       current = nextPermutation(current)
@@ -195,7 +195,7 @@ export function Anagrams() {
   })
   const target = () => all().indexOf("ocnano")
   const index = () => Math.floor(time() / 90) % arrangements
-  const word = () => all()[index()] ?? "cdeenoop"
+  const word = () => all()[index()] ?? "ocnano"
   const real = () => word() === "ocnano"
 
   return (
@@ -203,7 +203,7 @@ export function Anagrams() {
       id="anagrams"
       tone="ink"
       lead={fontContent.anagrams.lead}
-      aside={`8! / (2! × 2!) = ${arrangements.toLocaleString("en")}`}
+      aside={`6! / (2! × 2!) = ${arrangements.toLocaleString("en")}`}
     >
       <div data-slot="anagram" ref={root}>
         <div data-slot="anagram-counter">
