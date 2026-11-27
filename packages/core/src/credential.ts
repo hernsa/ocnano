@@ -12,32 +12,49 @@ import { EffectFlock } from "@ocnano/util/effect-flock"
 import { CredentialTable } from "./credential/sql.js"
 import { ErrorSummary } from "./util/error-summary.js"
 import { FSUtil } from "@ocnano/util/fs-util"
+import { Global } from "@ocnano/util/global"
 import path from "node:path"
+import { writeFile } from "node:fs/promises"
 import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto"
 
 const ENCRYPTION_PREFIX = "ocnano-enc-v1:"
+const KEY_FILE = "credential.key"
+const KEY_LENGTH = 32
 
-function encryptionKeyPath() {
-  return path.join(process.cwd(), ".ocnano-credential.key")
+/**
+ * The key encrypts rows in the shared database, so every process must find the
+ * same file. The working directory differs between the desktop service, a CLI
+ * run and the TUI, so it cannot name the key.
+ */
+function encryptionKeyPath(data: string) {
+  return path.join(data, KEY_FILE)
 }
 
 let keyCache: Buffer | undefined
 
-function loadOrCreateKey(fs: FSUtil.Interface): Effect.Effect<Buffer> {
+function loadOrCreateKey(fs: FSUtil.Interface, data: string): Effect.Effect<Buffer> {
   return Effect.gen(function* () {
     if (keyCache) return keyCache
-    const keyPath = encryptionKeyPath()
-    let key: Buffer
-    try {
-      key = yield* fs
-        .readFile(keyPath)
-        .pipe(Effect.map((buf) => Buffer.from(buf)))
-    } catch {
-      key = randomBytes(32)
-      yield* fs
-        .writeFile(keyPath, key, { mode: 0o600 })
-        .pipe(Effect.orDie)
-    }
+    const keyPath = encryptionKeyPath(data)
+    // Effect failures travel in the error channel, so a JavaScript try/catch
+    // never sees them: a missing key file has to be handled here. The create is
+    // exclusive, so two processes racing here cannot end up with different
+    // keys, and every reader ends up with the one that was written first.
+    yield* Effect.tryPromise({
+      try: () => writeFile(keyPath, randomBytes(KEY_LENGTH), { flag: "wx", mode: 0o600 }),
+      catch: () => undefined,
+    })
+    const key = yield* fs
+      .readFile(keyPath)
+      .pipe(
+        Effect.map((buf) => Buffer.from(buf)),
+        Effect.flatMap((buf) =>
+          buf.length === KEY_LENGTH
+            ? Effect.succeed(buf)
+            : Effect.die(new Error(`Credential key is ${buf.length} bytes, expected ${KEY_LENGTH}`)),
+        ),
+        Effect.orDie,
+      )
     keyCache = key
     return key
   }).pipe(Effect.orDie)
@@ -52,7 +69,9 @@ function encryptValue(value: unknown, key: Buffer): string {
   return ENCRYPTION_PREFIX + Buffer.concat([iv, tag, encrypted]).toString("base64")
 }
 
-function decryptValue(stored: string, key: Buffer): unknown {
+function decryptValue(stored: unknown, key: Buffer): unknown {
+  // Stored rows are JSON: a legacy value reads back as an object, an encrypted one as a string.
+  if (typeof stored !== "string") return Schema.decodeUnknownSync(CredentialLegacy.Value)(stored)
   if (!stored.startsWith(ENCRYPTION_PREFIX)) return Schema.decodeUnknownSync(CredentialLegacy.Value)(stored)
   const raw = Buffer.from(stored.slice(ENCRYPTION_PREFIX.length), "base64")
   const iv = raw.subarray(0, 12)
@@ -60,8 +79,9 @@ function decryptValue(stored: string, key: Buffer): unknown {
   const encrypted = raw.subarray(28)
   const decipher = createDecipheriv("aes-256-gcm", key, iv)
   decipher.setAuthTag(tag)
+  // The plaintext is the JSON text of the value, so it is parsed before the schema sees it.
   const plaintext = Buffer.concat([decipher.update(encrypted), decipher.final()]).toString("utf8")
-  return Schema.decodeUnknownSync(CredentialLegacy.Value)(plaintext)
+  return Schema.decodeUnknownSync(CredentialLegacy.Value)(JSON.parse(plaintext))
 }
 
 export const ID = Credential.ID
@@ -142,10 +162,11 @@ const layer = Layer.effect(
     const flock = yield* EffectFlock.Service
     const scope = yield* Effect.scope
     const fs = yield* FSUtil.Service
+    const global = yield* Global.Service
     const pending = new Map<ID, Fiber.Fiber<OAuth | undefined, unknown>>()
     // Rows written before v2.1 may carry the old key credential shape; decryptValue
     // falls back to the legacy schema for unencrypted rows.
-    const key = yield* loadOrCreateKey(fs)
+    const key = yield* loadOrCreateKey(fs, global.data)
     const stored = (row: typeof CredentialTable.$inferSelect) => {
       if (!row.integration_id) return
       return new Info({
@@ -406,4 +427,8 @@ const layer = Layer.effect(
   }),
 )
 
-export const node = makeGlobalNode({ service: Service, layer, deps: [Database.node, Bus.node, EffectFlock.node, FSUtil.node] })
+export const node = makeGlobalNode({
+  service: Service,
+  layer,
+  deps: [Global.node, Database.node, Bus.node, EffectFlock.node, FSUtil.node],
+})

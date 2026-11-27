@@ -1,6 +1,8 @@
-import { describe, expect } from "bun:test"
+import { afterAll, describe, expect } from "bun:test"
 import { eq, sql } from "drizzle-orm"
 import { Effect } from "effect"
+import path from "node:path"
+import { readFile, rm } from "node:fs/promises"
 import { Bus } from "@ocnano/core/bus"
 import { Credential } from "@ocnano/core/credential"
 import { CredentialTable } from "@ocnano/core/credential/sql"
@@ -10,11 +12,22 @@ import { AbsolutePath } from "@ocnano/core/schema"
 import { Workspace } from "@ocnano/core/workspace"
 import { Event } from "@ocnano/schema/event"
 import { LayerNode } from "@ocnano/util/effect/layer-node"
+import { Global } from "@ocnano/util/global"
 import { Integration } from "@ocnano/core/integration"
 import { location } from "./fixture/location"
+import { tmpdir } from "./fixture/tmpdir"
 import { testEffect } from "./lib/effect"
 
-const it = testEffect(LayerNode.compile(LayerNode.group([Credential.node, Bus.node, Database.node])))
+// The credential key belongs to the shared data directory, so the suite gets one
+// of its own: the key it creates must never be the one the application uses.
+const tmp = await tmpdir()
+afterAll(() => rm(tmp.path, { recursive: true, force: true }).catch(() => {}))
+
+const it = testEffect(
+  LayerNode.compile(LayerNode.group([Credential.node, Bus.node, Database.node, Global.node]), {
+    replacements: [Global.node.replace(Global.layerWith({ data: tmp.path }))],
+  }),
+)
 
 describe("Credential", () => {
   it.effect("stores, updates, lists, and removes credentials", () =>
@@ -266,6 +279,34 @@ describe("Credential", () => {
         { type: Credential.Event.Switched.type, data: { integrationID, credentialID: legacy.id } },
         { type: Credential.Event.Updated.type, data: { integrationID, credentialID: imported.id } },
       ])
+    }),
+  )
+
+  it.effect("keeps the credential key in the shared data directory and encrypts with it", () =>
+    Effect.gen(function* () {
+      const credentials = yield* Credential.Service
+      const database = yield* Database.Service
+      const global = yield* Global.Service
+      const integrationID = Integration.ID.make("openai")
+
+      const created = yield* credentials.create({
+        integrationID,
+        value: Credential.Key.make({ type: "key", key: "secret" }),
+      })
+      const row = yield* database.db
+        .select({ value: CredentialTable.value })
+        .from(CredentialTable)
+        .where(eq(CredentialTable.id, created.id))
+        .get()
+        .pipe(Effect.orDie)
+
+      // The stored value is ciphertext, so the key was loaded and used.
+      expect(String(row?.value)).toStartWith("ocnano-enc-v1:")
+      const key = yield* Effect.promise(() => readFile(path.join(global.data, "credential.key")))
+      expect(key.length).toBe(32)
+      // The key names a file every process reaches through the data directory,
+      // never one under the directory the process happened to start in.
+      expect(path.join(global.data, "credential.key")).not.toStartWith(process.cwd())
     }),
   )
 })
