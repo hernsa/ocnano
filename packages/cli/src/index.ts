@@ -8,6 +8,7 @@ import { Commands } from "./commands/commands"
 import { Runtime } from "./framework/runtime"
 import { Observability } from "@ocnano/util/observability"
 import { Updater } from "./services/updater"
+import { dropUnreachableProxies } from "./services/proxy-env"
 import { OCNANO_ARTIFACT, OCNANO_CHANNEL, OCNANO_LOCAL, OCNANO_VERSION } from "./version"
 import { LayerNode } from "@ocnano/util/effect/layer-node"
 import { Global } from "@ocnano/util/global"
@@ -31,6 +32,15 @@ const noProxy = [
 
 process.env.NO_PROXY = noProxy
 process.env.no_proxy = noProxy
+
+// A proxy that no longer answers must not wedge every outbound request: the
+// client would route through a dead socket and every provider call would fail
+// with ECONNREFUSED. Drop such a proxy before the first request goes out.
+const droppedProxies = await dropUnreachableProxies()
+if (droppedProxies.length > 0)
+  console.warn(
+    `warning: dropped ${droppedProxies.join(", ")} — the proxy it names refuses connections, so every request through it would fail`,
+  )
 
 ensurePluginRuntime()
 
