@@ -2,7 +2,8 @@ import { afterAll, describe, expect } from "bun:test"
 import { eq, sql } from "drizzle-orm"
 import { Effect } from "effect"
 import path from "node:path"
-import { readFile, rm } from "node:fs/promises"
+import { readFile, rm, writeFile } from "node:fs/promises"
+import { randomBytes } from "node:crypto"
 import { Bus } from "@ocnano/core/bus"
 import { Credential } from "@ocnano/core/credential"
 import { CredentialTable } from "@ocnano/core/credential/sql"
@@ -26,6 +27,20 @@ afterAll(() => rm(tmp.path, { recursive: true, force: true }).catch(() => {}))
 const it = testEffect(
   LayerNode.compile(LayerNode.group([Credential.node, Bus.node, Database.node, Global.node]), {
     replacements: [Global.node.replace(Global.layerWith({ data: tmp.path }))],
+  }),
+)
+
+// A second suite with a key that is already on disk. The create must not be
+// treated as a failure when the file exists, or every boot after the first
+// would die before the server came up.
+const tmpExisting = await tmpdir()
+const existingKey = randomBytes(32)
+await writeFile(path.join(tmpExisting.path, "credential.key"), existingKey, { mode: 0o600 })
+afterAll(() => rm(tmpExisting.path, { recursive: true, force: true }).catch(() => {}))
+
+const itExisting = testEffect(
+  LayerNode.compile(LayerNode.group([Credential.node, Bus.node, Database.node, Global.node]), {
+    replacements: [Global.node.replace(Global.layerWith({ data: tmpExisting.path }))],
   }),
 )
 
@@ -307,6 +322,29 @@ describe("Credential", () => {
       // The key names a file every process reaches through the data directory,
       // never one under the directory the process happened to start in.
       expect(path.join(global.data, "credential.key")).not.toStartWith(process.cwd())
+    }),
+  )
+})
+
+describe("Credential with a key already on disk", () => {
+  itExisting.effect("boots on the key that is already there and leaves it alone", () =>
+    Effect.gen(function* () {
+      const credentials = yield* Credential.Service
+      const global = yield* Global.Service
+      const keyPath = path.join(global.data, "credential.key")
+      const before = yield* Effect.promise(() => readFile(keyPath))
+      const integrationID = Integration.ID.make("openai")
+
+      const created = yield* credentials.create({
+        integrationID,
+        value: Credential.Key.make({ type: "key", key: "secret" }),
+      })
+      expect(yield* credentials.list(integrationID)).toEqual([created])
+
+      // The key that was already there is the one that was used: the create
+      // must not replace it, or two processes would hold different keys.
+      const after = yield* Effect.promise(() => readFile(keyPath))
+      expect(Buffer.from(after).equals(Buffer.from(before))).toBe(true)
     }),
   )
 })

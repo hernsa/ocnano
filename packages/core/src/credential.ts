@@ -40,10 +40,13 @@ function loadOrCreateKey(fs: FSUtil.Interface, data: string): Effect.Effect<Buff
     // never sees them: a missing key file has to be handled here. The create is
     // exclusive, so two processes racing here cannot end up with different
     // keys, and every reader ends up with the one that was written first.
+    // A create that fails because the file is already there is not a failure:
+    // the key already on disk is the one every process must use, so the
+    // failure is swallowed and the file is read back.
     yield* Effect.tryPromise({
       try: () => writeFile(keyPath, randomBytes(KEY_LENGTH), { flag: "wx", mode: 0o600 }),
       catch: () => undefined,
-    })
+    }).pipe(Effect.catch(() => Effect.void))
     const key = yield* fs
       .readFile(keyPath)
       .pipe(
