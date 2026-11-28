@@ -49,6 +49,8 @@ function credentialFromRequest(request: HttpServerRequest.HttpServerRequest) {
 // with their window, so an idle server forgets them.
 const FAILURE_WINDOW_MS = 60_000
 const MAX_FAILURES = 20
+// A client that rotates the address it forwards must not grow the table for ever.
+const MAX_TRACKED_CLIENTS = 1024
 const failures = new Map<string, { count: number; resetAt: number }>()
 
 function clientKey(request: HttpServerRequest.HttpServerRequest) {
@@ -70,10 +72,24 @@ function failedAttempts(key: string) {
 function recordFailure(key: string) {
   const entry = failures.get(key)
   if (!entry || Date.now() >= entry.resetAt) {
+    pruneFailures()
     failures.set(key, { count: 1, resetAt: Date.now() + FAILURE_WINDOW_MS })
     return
   }
   entry.count += 1
+}
+
+// Drop the counters that fell out of their window, then the oldest ones when the table
+// is still over its cap. Without this a client that rotates the address it forwards
+// would leave an entry behind for every request it makes.
+function pruneFailures() {
+  const now = Date.now()
+  for (const [key, entry] of failures) if (now >= entry.resetAt) failures.delete(key)
+  while (failures.size > MAX_TRACKED_CLIENTS) {
+    const oldest = failures.keys().next()
+    if (oldest.done) return
+    failures.delete(oldest.value)
+  }
 }
 
 function clearFailures(key: string) {
