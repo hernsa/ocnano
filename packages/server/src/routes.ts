@@ -93,14 +93,15 @@ export function createRoutes(
   overrides: LayerNode.Replacements = [],
 ) {
   const password =
-    options.password ??
-    (() => {
-      const generated = generateDefaultPassword()
-      console.log(
-        `[ocnano] No OCNANO_SERVER_PASSWORD set. Generated default server password: ${generated}`,
-      )
-      return generated
-    })()
+    options.password && options.password.length > 0
+      ? options.password
+      : (() => {
+          const generated = generateDefaultPassword()
+          console.log(
+            `[ocnano] No OCNANO_SERVER_PASSWORD set. Generated default server password: ${generated}`,
+          )
+          return generated
+        })()
   return makeRoutes(
     ServerAuth.Config.configLayer({ password: Option.some(password) }),
     options,
@@ -119,14 +120,15 @@ export function createEmbeddedRoutes(
   instances?: InstanceNode,
 ) {
   const password =
-    options.password ??
-    (() => {
-      const generated = generateDefaultPassword()
-      console.log(
-        `[ocnano] No OCNANO_SERVER_PASSWORD set for embedded server. Generated default password: ${generated}`,
-      )
-      return generated
-    })()
+    options.password && options.password.length > 0
+      ? options.password
+      : (() => {
+          const generated = generateDefaultPassword()
+          console.log(
+            `[ocnano] No OCNANO_SERVER_PASSWORD set for embedded server. Generated default password: ${generated}`,
+          )
+          return generated
+        })()
   return makeRoutes(
     ServerAuth.Config.configLayer({ password: Option.some(password) }),
     options,

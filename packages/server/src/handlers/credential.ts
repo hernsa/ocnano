@@ -26,6 +26,13 @@ export const CredentialHandler = HttpApiBuilder.group(Api, "server.credential", 
         }),
       )
       .handle(
+        "credential.export",
+        Effect.fn(function* () {
+          const credential = yield* Credential.Service
+          return { data: entries(yield* credential.all(), true) }
+        }),
+      )
+      .handle(
         "credential.create",
         Effect.fn(function* (ctx) {
           yield* requireConnectable(ctx.payload.integrationID).pipe(
@@ -72,13 +79,23 @@ export const CredentialHandler = HttpApiBuilder.group(Api, "server.credential", 
 )
 
 // Credential listings order each integration's selected credential last.
-function entries(credentials: Credential.Info[]) {
+function entries(credentials: Credential.Info[], reveal = false) {
   const selected = new Map(credentials.map((item) => [item.integrationID, item.id]))
   return credentials.map((item) => ({
     id: item.id,
     integrationID: item.integrationID,
     label: item.label,
     active: selected.get(item.integrationID) === item.id,
-    value: item.value,
+    value: reveal ? item.value : maskValue(item.value),
   }))
+}
+
+// A listing is metadata: the secret is only handed out by the export endpoint.
+function maskValue(value: Credential.Info["value"]): Credential.Info["value"] {
+  if (typeof value !== "object" || value === null) return value
+  const record = value as Record<string, unknown>
+  if (record.type === "key") return { ...record, key: "" } as Credential.Info["value"]
+  if (record.type === "oauth")
+    return { ...record, refresh: "", access: "", expires: 0 } as Credential.Info["value"]
+  return value
 }

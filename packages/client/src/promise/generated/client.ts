@@ -161,6 +161,7 @@ import type {
   ExperimentalMcpClientTokenInput,
   ExperimentalMcpClientTokenOutput,
   CredentialListOutput,
+  CredentialExportOutput,
   CredentialCreateInput,
   CredentialCreateOutput,
   CredentialUpdateInput,
@@ -1989,6 +1990,17 @@ export function make(options: ClientOptions) {
       list: (requestOptions?: RequestOptions) =>
         request<{ readonly data: CredentialListOutput }>(
           { method: "GET", path: `/api/credential`, successStatus: 200, declaredStatuses: [400, 401], empty: false },
+          requestOptions,
+        ).then((value) => value.data),
+      export: (requestOptions?: RequestOptions) =>
+        request<{ readonly data: CredentialExportOutput }>(
+          {
+            method: "GET",
+            path: `/api/credential/export`,
+            successStatus: 200,
+            declaredStatuses: [400, 401],
+            empty: false,
+          },
           requestOptions,
         ).then((value) => value.data),
       create: (input: CredentialCreateInput, requestOptions?: RequestOptions) =>

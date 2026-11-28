@@ -6,6 +6,7 @@ import { SessionTransfer } from "@ocnano/core/session/transfer"
 import { InstructionEntry } from "@ocnano/core/session/instruction-entry"
 import { Form } from "@ocnano/core/form"
 import { DateTime, Effect, Stream } from "effect"
+import { stat } from "node:fs/promises"
 import { HttpServerResponse } from "effect/http"
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api"
 import { SessionMediaMessageResponse } from "@ocnano/protocol/groups/message"
@@ -101,6 +102,22 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
       .handle(
         "session.create",
         Effect.fn(function* (ctx) {
+          const requested = ctx.payload.location
+          // A child session works in its parent's location, so only the directory
+          // that will actually be used is checked.
+          if (requested !== undefined && ctx.payload.parentID === undefined) {
+            // The directory is where the session works, so it has to be a real directory
+            // on this machine. A path that is not one fails here, with the reason.
+            const info = yield* Effect.promise(() => stat(requested.directory)).pipe(
+              Effect.catch(() =>
+                Effect.fail(
+                  new InvalidRequestError({ message: `Directory does not exist: ${requested.directory}` }),
+                ),
+              ),
+            )
+            if (!info.isDirectory())
+              return yield* new InvalidRequestError({ message: `Not a directory: ${requested.directory}` })
+          }
           return {
             data: yield* session
               .create({

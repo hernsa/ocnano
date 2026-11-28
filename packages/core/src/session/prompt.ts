@@ -224,7 +224,7 @@ const readFileAttachment = Effect.fn("SessionPrompt.readFileAttachment")(functio
   // Use size + mtime as the cache stamp: cheap to compute (no content hash),
   // and changes whenever the file is rewritten. Check the native cache before
   // reading the file so cache hits avoid a disk read entirely.
-  const stamp = `${info.size}:${info.mtimeMs ?? info.mtime ?? 0}`
+  const stamp = `${info.size}:${Option.match(info.mtime, { onSome: (mtime) => mtime.getTime(), onNone: () => 0 })}`
   const id = attachmentId(target, undefined, undefined, stamp)
   const cached = nativeCall(() => OcNano.getAttachment(id))
   if (cached)
@@ -272,16 +272,6 @@ function positiveInt(value: string | null) {
  */
 function attachmentId(uri: string, start: number | undefined, end: number | undefined, stamp: string) {
   return `${uri}|${start ?? ""}|${end ?? ""}|${stamp}`
-}
-
-/** Fast content hash used as the cache stamp: same bytes produce the same id. */
-function contentStamp(bytes: Uint8Array): string {
-  let hash = 2166136261
-  for (let i = 0; i < bytes.length; i++) {
-    hash ^= bytes[i]
-    hash = (hash * 16777619) >>> 0
-  }
-  return hash.toString(16)
 }
 
 /** A stable handle for the native attachment API. */

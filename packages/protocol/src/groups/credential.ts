@@ -11,7 +11,20 @@ export const CredentialGroup = HttpApiGroup.make("server.credential")
       OpenApi.annotations({
         identifier: "credential.list",
         summary: "List credentials",
-        description: "List every stored integration credential, including its secret value.",
+        description:
+          "List every stored integration credential. The secret value is left out: use credential export to read it.",
+      }),
+    ),
+  )
+  .add(
+    HttpApiEndpoint.get("credential.export", "/api/credential/export", {
+      success: Schema.Struct({ data: Schema.Array(Credential.Entry) }),
+    }).annotateMerge(
+      OpenApi.annotations({
+        identifier: "credential.export",
+        summary: "Export credentials",
+        description:
+          "Return every stored integration credential including its secret value. The response holds every secret the server stores, so it is meant for backing credentials up.",
       }),
     ),
   )

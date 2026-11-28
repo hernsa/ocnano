@@ -37,9 +37,24 @@ export function generateDefaultPassword(): string {
 
 // Session tokens issued by pairing links are accepted anywhere the password is.
 export function authorized(credentials: DecodedCredentials, config: Info) {
-  if (Option.isNone(config.password) || credentials.username !== config.username) return false
+  if (Option.isNone(config.password)) return false
+  // An empty password never authenticates anyone. Without this a server started with an
+  // empty password would accept "ocnano:" from anyone, and a submitted empty password
+  // would match an empty configured one.
+  if (config.password.value === "") return false
+  if (credentials.username !== config.username) return false
   const password = Redacted.value(credentials.password)
-  return password === config.password.value || verifySession(password, config)
+  if (password === "") return false
+  if (sameSecret(password, config.password.value)) return true
+  return verifySession(password, config)
+}
+
+// Compare without leaking how much of the secret matched.
+function sameSecret(left: string, right: string) {
+  const a = Buffer.from(left)
+  const b = Buffer.from(right)
+  if (a.length !== b.length) return false
+  return timingSafeEqual(a, b)
 }
 
 // Sessions are signed with a key derived from the server password, so rotating the password revokes every session.

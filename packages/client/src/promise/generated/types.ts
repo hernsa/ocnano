@@ -4177,6 +4177,8 @@ export type ExperimentalMcpClientTokenOutput = { location: LocationPublicRef; da
 
 export type CredentialListOutput = { data: Array<CredentialEntry> }["data"]
 
+export type CredentialExportOutput = { data: Array<CredentialEntry> }["data"]
+
 export type CredentialCreateInput = {
   readonly id?: string | undefined
   readonly integrationID: string

@@ -1832,6 +1832,9 @@ export interface ExperimentalMcpApi<E = never> {
 export type CredentialListOutput = ReadonlyArray<Credential.Entry>
 export type CredentialListOperation<E = never> = () => Effect.Effect<CredentialListOutput, E>
 
+export type CredentialExportOutput = ReadonlyArray<Credential.Entry>
+export type CredentialExportOperation<E = never> = () => Effect.Effect<CredentialExportOutput, E>
+
 export type CredentialCreateInput = {
   readonly id?: Credential.ID | undefined
   readonly integrationID: Integration.ID
@@ -1864,6 +1867,7 @@ export type CredentialRemoveOperation<E = never> = (
 
 export interface CredentialApi<E = never> {
   readonly list: CredentialListOperation<E>
+  readonly export: CredentialExportOperation<E>
   readonly create: CredentialCreateOperation<E>
   readonly update: CredentialUpdateOperation<E>
   readonly activate: CredentialActivateOperation<E>

@@ -31,12 +31,53 @@ function decodeCredential(input: string) {
 }
 
 function credentialFromRequest(request: HttpServerRequest.HttpServerRequest) {
-  const url = new URL(request.url, "http://localhost")
-  const token = url.searchParams.get(AUTH_TOKEN_QUERY)
-  if (token) return decodeCredential(token)
+  // The header wins: it is the one credential the client controls and the one that never
+  // reaches a log. A token in the query string is read only for plain reads, because a
+  // query string ends up in access logs, proxy logs and browser history.
   const match = /^Basic\s+(.+)$/i.exec(request.headers.authorization ?? "")
   if (match) return decodeCredential(match[1])
+  if (request.method === "GET") {
+    const url = new URL(request.url, "http://localhost")
+    const token = url.searchParams.get(AUTH_TOKEN_QUERY)
+    if (token) return decodeCredential(token)
+  }
   return Effect.succeed(emptyCredential())
+}
+
+// Failed authentications are counted per client so a password cannot be guessed one
+// attempt at a time. A client that authenticates clears its count. The counters expire
+// with their window, so an idle server forgets them.
+const FAILURE_WINDOW_MS = 60_000
+const MAX_FAILURES = 20
+const failures = new Map<string, { count: number; resetAt: number }>()
+
+function clientKey(request: HttpServerRequest.HttpServerRequest) {
+  const forwarded = request.headers["x-forwarded-for"]
+  if (typeof forwarded === "string" && forwarded.length > 0) return forwarded.split(",")[0]?.trim() || "local"
+  return "local"
+}
+
+function failedAttempts(key: string) {
+  const entry = failures.get(key)
+  if (!entry) return 0
+  if (Date.now() >= entry.resetAt) {
+    failures.delete(key)
+    return 0
+  }
+  return entry.count
+}
+
+function recordFailure(key: string) {
+  const entry = failures.get(key)
+  if (!entry || Date.now() >= entry.resetAt) {
+    failures.set(key, { count: 1, resetAt: Date.now() + FAILURE_WINDOW_MS })
+    return
+  }
+  entry.count += 1
+}
+
+function clearFailures(key: string) {
+  failures.delete(key)
 }
 
 const UNAUTHORIZED_MESSAGE = "Authentication required"
@@ -80,30 +121,38 @@ export const authorizationLayer = Layer.effect(
       Effect.gen(function* () {
         const request = yield* HttpServerRequest.HttpServerRequest
         const route = yield* HttpRouter.RouteContext
-        // Always require base authentication first, even for ticketed routes.
-        // Tickets authorize a specific action (PTY connect, MCP client, pairing)
-        // but do not by themselves authenticate the caller.
+        const url = new URL(request.url, "http://localhost")
+        // Ticketed connects (PTY, persistent PTY, client MCP) and pairing links carry their own
+        // single-use credential: a browser cannot set an Authorization header on a WebSocket
+        // upgrade. Their handler consumes and validates the ticket or code, so the request
+        // reaches it untouched. Use the route selected by Effect so authorization and dispatch
+        // cannot disagree about the request path.
+        const ticketed =
+          ((route.route.path === PTY_CONNECT_PATH ||
+            route.route.path === PERSISTENT_PTY_CONNECT_PATH ||
+            route.route.path === MCP_CLIENT_PATH) &&
+            !!url.searchParams.get(PTY_CONNECT_TICKET_QUERY)) ||
+          route.route.path === PAIRING_CONNECT_PATH
+        if (ticketed) return yield* effect
+        // Every other request needs the server password or a session cookie.
+        const key = clientKey(request)
+        if (failedAttempts(key) >= MAX_FAILURES)
+          return HttpServerResponse.jsonUnsafe(
+            { _tag: "TooManyRequestsError", message: "Too many failed authentication attempts" },
+            {
+              status: 429,
+              headers: { "retry-after": String(Math.ceil(FAILURE_WINDOW_MS / 1000)) },
+            },
+          )
         if (!(yield* authorizedRequest(request, config))) {
+          recordFailure(key)
           if (challengeRequest(request))
             yield* HttpEffect.appendPreResponseHandler((_request, response) =>
               Effect.succeed(HttpServerResponse.setHeader(response, "www-authenticate", WWW_AUTHENTICATE)),
             )
           return yield* new UnauthorizedError({ message: UNAUTHORIZED_MESSAGE })
         }
-        // Ticketed PTY and client MCP connects (browsers cannot set headers on WebSocket upgrades)
-        // and pairing links skip the additional credential check here; their handlers consume and
-        // validate the ticket or code. Use the route selected by Effect so authorization and dispatch
-        // cannot disagree about the request path.
-        const url = new URL(request.url, "http://localhost")
-        if (
-          ((route.route.path === PTY_CONNECT_PATH ||
-            route.route.path === PERSISTENT_PTY_CONNECT_PATH ||
-            route.route.path === MCP_CLIENT_PATH) &&
-            !!url.searchParams.get(PTY_CONNECT_TICKET_QUERY)) ||
-          route.route.path === PAIRING_CONNECT_PATH
-        )
-          return yield* effect
-        // Authenticated ordinary request (not ticketed): pass through to the handler.
+        clearFailures(key)
         return yield* effect
       }),
     )

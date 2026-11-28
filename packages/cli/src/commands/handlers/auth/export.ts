@@ -12,7 +12,9 @@ export default Runtime.handler(
       const client = yield* createClient()
       const target = Option.getOrUndefined(input.target)
       const integrationID = target ? (yield* resolveIntegration(yield* loadIntegrations(client), target)).id : undefined
-      const credentials = (yield* request((signal) => client.credential.list({ signal }))).filter(
+      // The plain listing holds no secrets, so the export endpoint is the one that reads
+      // them.
+      const credentials = (yield* request((signal) => client.credential.export({ signal }))).filter(
         (credential) => !integrationID || credential.integrationID === integrationID,
       )
       if (process.stdout.isTTY)

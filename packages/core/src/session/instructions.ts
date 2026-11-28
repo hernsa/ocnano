@@ -37,6 +37,8 @@ const layer = Layer.effect(
     // absolute paths, but the human-facing description shows paths relative to the project
     // root so opening a subdirectory still describes paths from the project root.
     const root = yield* fs.resolve(location.project.directory)
+    // The files that may be read: the location itself, not the project it belongs to.
+    const readRoot = yield* fs.resolve(location.directory)
     // Same-step parallel reads settle concurrently, so an in-memory claim guards each
     // Session/path pair while a load is in flight. The claim is released once the load
     // settles: the synthetic message metadata scanned below is the only lasting ledger,
@@ -56,7 +58,11 @@ const layer = Layer.effect(
       if (claimed.length === 0) return
       yield* Effect.gen(function* () {
         const alreadyInjected = yield* previouslyInjected(db, input.sessionID)
-        const toInject = claimed.filter((path) => !alreadyInjected.has(path))
+        // Only files inside the location are instruction files for it: a path anywhere
+        // else on the host is not read.
+        const toInject = claimed.filter(
+          (path) => !alreadyInjected.has(path) && FSUtil.contains(readRoot, path),
+        )
         if (toInject.length === 0) return
         const files = yield* Effect.forEach(
           toInject,

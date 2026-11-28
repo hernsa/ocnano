@@ -5,6 +5,7 @@ import type { Disp, Proc } from "#pty"
 import { Context, Effect, Layer, Schema, Types } from "effect"
 import { Pty } from "@ocnano/schema/pty"
 import { Bus } from "./bus.js"
+import { inheritedEnv } from "./env.js"
 import { Location } from "./location.js"
 import { ShellSelect } from "./shell/select.js"
 import { lazy } from "./util/lazy.js"
@@ -169,7 +170,7 @@ const layer = Layer.effect(
       const args = ShellSelect.login(command) ? [...(input.args ?? []), "-l"] : [...(input.args ?? [])]
       const cwd = input.cwd || location.directory
       const env = {
-        ...process.env,
+        ...inheritedEnv(),
         ...input.env,
         TERM: "xterm-256color",
         OCNANO_TERMINAL: "1",

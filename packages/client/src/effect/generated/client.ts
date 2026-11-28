@@ -167,6 +167,7 @@ import type {
   ExperimentalMcpClientTokenInput,
   ExperimentalMcpClientTokenOutput,
   CredentialListOutput,
+  CredentialExportOutput,
   CredentialCreateInput,
   CredentialCreateOutput,
   CredentialUpdateInput,
@@ -1201,6 +1202,14 @@ const EndpointCredentialList = (raw: RawClient["server.credential"]) => () =>
     ),
   )
 
+const EndpointCredentialExport = (raw: RawClient["server.credential"]) => () =>
+  preserveEffect<CredentialExportOutput>()(
+    raw["credential.export"]({}).pipe(
+      Effect.mapError(mapClientError),
+      Effect.map((value) => value.data),
+    ),
+  )
+
 const EndpointCredentialCreate = (raw: RawClient["server.credential"]) => (input: CredentialCreateInput) =>
   preserveEffect<CredentialCreateOutput>()(
     raw["credential.create"]({
@@ -1239,6 +1248,7 @@ const EndpointCredentialRemove = (raw: RawClient["server.credential"]) => (input
 
 const adaptGroupCredential = (raw: RawClient["server.credential"]) => ({
   list: EndpointCredentialList(raw),
+  export: EndpointCredentialExport(raw),
   create: EndpointCredentialCreate(raw),
   update: EndpointCredentialUpdate(raw),
   activate: EndpointCredentialActivate(raw),

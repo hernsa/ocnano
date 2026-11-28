@@ -8,6 +8,29 @@ import { Location } from "./location.js"
 import { AbsolutePath, PositiveInt, RelativePath } from "./schema.js"
 import { FileSystemSearch } from "./filesystem/search.js"
 import { Entry, FileSystem, FindInput, Write } from "@ocnano/schema/filesystem"
+
+/**
+ * The real path of `target`, resolved through the closest ancestor that exists. A symlink
+ * inside the location resolves here, so a path that leaves the location can be refused
+ * before anything is written.
+ */
+const resolveExistingAncestor = Effect.fnUntraced(function* (fs: FSUtil.Interface, target: string) {
+  let dir = path.dirname(target)
+  for (;;) {
+    const real = yield* fs.realPath(dir).pipe(
+      Effect.catchReason(
+        "PlatformError",
+        "NotFound",
+        () => Effect.succeed(undefined),
+        (_, error) => Effect.die(error),
+      ),
+    )
+    if (real !== undefined) return path.join(real, path.relative(dir, target))
+    const parent = path.dirname(dir)
+    if (parent === dir) return undefined
+    dir = parent
+  }
+})
 export { Entry, Match, Submatch } from "@ocnano/schema/filesystem"
 
 export interface ReadInput {
@@ -204,6 +227,11 @@ const baseLayer = Layer.effect(
       write: Effect.fn("FileSystem.write")(function* (input) {
         const target = path.resolve(location.directory, input.path)
         if (!FSUtil.contains(location.directory, target))
+          return yield* Effect.fail(new NotFoundError({ path: RelativePath.make(input.path) }))
+        // The lexical check above does not see a symlink inside the location, so the real
+        // path of the target is checked as well.
+        const resolved = yield* resolveExistingAncestor(fs, target)
+        if (resolved !== undefined && !FSUtil.contains(root, resolved))
           return yield* Effect.fail(new NotFoundError({ path: RelativePath.make(input.path) }))
         yield* fs.writeWithDirs(target, input.data).pipe(Effect.orDie)
         return Write.make({ path: AbsolutePath.make(target) })

@@ -9,6 +9,7 @@ import { ChildProcess } from "effect/process"
 import { Agent } from "../agent.js"
 import { CodeModeTool } from "../codemode/tool.js"
 import { Environment } from "../environment/index.js"
+import { inheritedEnv } from "../env.js"
 import { FileAccess } from "../file-access.js"
 import { Location } from "../location.js"
 import { Permission } from "../permission.js"
@@ -426,7 +427,7 @@ const runShell = Effect.fnUntraced(function* (
     Effect.gen(function* () {
       const proc = ChildProcess.make(scanned.shell, ShellSelect.args(scanned.shell, condition.run), {
         cwd: scanned.cwd,
-        ...(scanned.workspaceID === undefined ? { env: process.env } : {}),
+        ...(scanned.workspaceID === undefined ? { env: inheritedEnv() } : {}),
         stdin: "ignore",
         detached: process.platform !== "win32",
         forceKillAfter: Duration.seconds(3),

@@ -3,6 +3,21 @@ export * as OcNano from "./oc-nano.js"
 import load from "./oc-nano-binding.js"
 
 /**
+ * Byte caps for the payloads the addon accepts. The addon parses a payload whole, so a
+ * payload over the cap is refused here instead of being handed over. The caps mirror the
+ * ones the addon itself enforces.
+ */
+const MAX_TOOL_SET_BYTES = 8 * 1024 * 1024
+const MAX_SCHEMA_BYTES = 4 * 1024 * 1024
+const MAX_INSTANCE_CONFIG_BYTES = 256 * 1024
+const MAX_INSTRUCTION_BYTES = 1024 * 1024
+const MAX_COMPACTION_INPUT_BYTES = 32 * 1024 * 1024
+
+function byteLength(text: string) {
+  return Buffer.byteLength(text, "utf8")
+}
+
+/**
  * Native addon surface exposed by `oc_nano_native.node`.
  *
  * Every binding is synchronous. `promptGetAttachment` throws when the
@@ -125,6 +140,7 @@ export function addPromptMessage(conversationId: number, role: string, content: 
 export function hashToolSet(toolsJson: string): number | undefined {
   const api = native()
   if (!api) return undefined
+  if (byteLength(toolsJson) > MAX_TOOL_SET_BYTES) return undefined
   return api.schemaCacheHash(toolsJson)
 }
 
@@ -139,6 +155,7 @@ export function getCachedSchema(model: string, toolSetHash: number): string | un
 export function putCachedSchema(model: string, toolSetHash: number, schemaJson: string, ttlSecs: number): boolean {
   const api = native()
   if (!api) return false
+  if (byteLength(schemaJson) > MAX_SCHEMA_BYTES) return false
   api.schemaCachePut(model, toolSetHash, schemaJson, ttlSecs)
   return true
 }
@@ -161,6 +178,7 @@ export function initPool(capacity: number, defaultTtlSecs: number): number {
 export function acquireInstance(poolId: number, instanceId: string, configJson: string, ttlSecs: number): string | undefined {
   const api = native()
   if (!api) return undefined
+  if (byteLength(configJson) > MAX_INSTANCE_CONFIG_BYTES) return undefined
   return api.statePoolAcquire(poolId, instanceId, configJson, ttlSecs)
 }
 
@@ -191,7 +209,9 @@ export function loadInstruction(path: string): string | undefined {
   const api = native()
   if (!api) return undefined
   try {
-    return api.instructionsLoad(path)
+    const value = api.instructionsLoad(path)
+    if (byteLength(value) > MAX_INSTRUCTION_BYTES) return undefined
+    return value
   } catch {
     return undefined
   }
@@ -208,6 +228,7 @@ export function evictInstruction(path: string): boolean {
 export function compactMessages(messagesJson: string, targetBytes: number): string | undefined {
   const api = native()
   if (!api) return undefined
+  if (byteLength(messagesJson) > MAX_COMPACTION_INPUT_BYTES) return undefined
   return api.compactSpill(messagesJson, targetBytes)
 }
 
@@ -215,5 +236,6 @@ export function compactMessages(messagesJson: string, targetBytes: number): stri
 export function pruneMessages(messagesJson: string, targetBytes: number): string | undefined {
   const api = native()
   if (!api) return undefined
+  if (byteLength(messagesJson) > MAX_COMPACTION_INPUT_BYTES) return undefined
   return api.compactPruneOld(messagesJson, targetBytes)
 }
